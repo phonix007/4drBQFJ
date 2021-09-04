@@ -2,6 +2,7 @@ package com.study.maha360;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,6 +22,7 @@ import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -38,8 +40,6 @@ public class MainActivity extends AppCompatActivity {
     private WebView webview;
     private ProgressBar progressBar;
 
-   
-
     private long backPressedTime;
     private Toast backToast;
 
@@ -53,13 +53,11 @@ public class MainActivity extends AppCompatActivity {
         progressBar.getProgressDrawable().setColorFilter(
                 Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
 
-
         if (!CheckNetwork.isInternetAvailable(this)) //returns true if internet available
         {
             //if there is no internet do this
             setContentView(R.layout.activity_main);
             //Toast.makeText(this,"No Internet Connection, Chris",Toast.LENGTH_LONG).show();
-
             new AlertDialog.Builder(this) //alert the person knowing they are about to close
                     .setTitle("No internet connection available")
                     .setMessage("Please Check you're Mobile data or Wifi network.")
@@ -82,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             progressBar.setProgress(0);
             webview.setWebViewClient(new WebViewClientDemo());
 
-            webview.setWebChromeClient(new WebChromeClient(){
+            webview.setWebChromeClient(new WebChromeClient() {
 
                 @Override
                 public void onProgressChanged(WebView view, int newProgress) {
@@ -96,19 +94,17 @@ public class MainActivity extends AppCompatActivity {
             });
 
 
-
-
         }
 
         //Swipe to refresh functionality
 
 
-        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.M){
-            if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
 
-                Log.d("permission","permission denied to WRITE_EXTERNAL_STORAGE - requesting it");
+                Log.d("permission", "permission denied to WRITE_EXTERNAL_STORAGE - requesting it");
                 String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-                requestPermissions(permissions,1);
+                requestPermissions(permissions, 1);
             }
 
 
@@ -116,33 +112,33 @@ public class MainActivity extends AppCompatActivity {
 
 //handle downloading
         try {
-        webview.setDownloadListener(new DownloadListener() {
-            @Override
-            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimeType, long contentLength) {
+            webview.setDownloadListener(new DownloadListener() {
+                @Override
+                public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimeType, long contentLength) {
 
 
-                String currentTime = java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
+                    String currentTime = java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
 
-                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
-                request.setMimeType(mimeType);
-                String cookies = CookieManager.getInstance().getCookie(url);
-                String fileName = URLUtil.guessFileName(url, contentDisposition, mimeType);
-                request.addRequestHeader("cookie",cookies);
-                request.addRequestHeader("User-Agent",userAgent);
-                request.setDescription("Saved On Storage/Downloads/");
-                request.setTitle( "Maha_360_App_" + currentTime + URLUtil.guessFileName(url,contentDisposition,mimeType));
-                request.allowScanningByMediaScanner();
-                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "Maha_360_App_"+ currentTime + URLUtil.guessFileName(url, contentDisposition, mimeType));
-                DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-                dm.enqueue(request);
-                Toast.makeText(getApplicationContext(),"Downloading File...",Toast.LENGTH_LONG).show();
+                    DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+                    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+                    request.setMimeType(mimeType);
+                    String cookies = CookieManager.getInstance().getCookie(url);
+                    String fileName = URLUtil.guessFileName(url, contentDisposition, mimeType);
+                    request.addRequestHeader("cookie", cookies);
+                    request.addRequestHeader("User-Agent", userAgent);
+                    request.setDescription("Saved On Storage/Downloads/");
+                    request.setTitle("Maha_360_App_" + currentTime + URLUtil.guessFileName(url, contentDisposition, mimeType));
+                    request.allowScanningByMediaScanner();
+                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "Maha_360_App_" + currentTime + URLUtil.guessFileName(url, contentDisposition, mimeType));
+                    DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                    dm.enqueue(request);
+                    Toast.makeText(getApplicationContext(), "Downloading File...", Toast.LENGTH_LONG).show();
 
-            }
-        });
+                }
+            });
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(MainActivity.this, "Something Went Wrong! Please Check Your Internet Connection...", Toast.LENGTH_LONG).show();
             Toast.makeText(MainActivity.this, "Something Went Wrong! Please Check Your Internet Connection...", Toast.LENGTH_LONG).show();
         }
