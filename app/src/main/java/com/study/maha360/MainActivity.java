@@ -6,6 +6,7 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -49,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progress_bar);
         progressBar.setMax(100);
+        progressBar.getProgressDrawable().setColorFilter(
+                Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
 
 
         if (!CheckNetwork.isInternetAvailable(this)) //returns true if internet available
@@ -85,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onProgressChanged(WebView view, int newProgress) {
                     progressBar.setProgress(newProgress);
                     if (newProgress == 100)
-                        progressBar.setVisibility(View.INVISIBLE);
+                        progressBar.setVisibility(View.GONE);
                     else
                         progressBar.setVisibility(View.VISIBLE);
                     super.onProgressChanged(view, newProgress);
