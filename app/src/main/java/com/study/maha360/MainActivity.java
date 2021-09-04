@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
         progressBar.getProgressDrawable().setColorFilter(
                 Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
 
+        netcheck();
+
         if (!CheckNetwork.isInternetAvailable(this)) //returns true if internet available
         {
             //if there is no internet do this
@@ -77,8 +79,10 @@ public class MainActivity extends AppCompatActivity {
             webview.getSettings().setDomStorageEnabled(true);
             webview.setOverScrollMode(WebView.OVER_SCROLL_NEVER);
             webview.loadUrl(websiteURL);
+            netcheck();
             progressBar.setProgress(0);
             webview.setWebViewClient(new WebViewClientDemo());
+            netcheck();
 
             webview.setWebChromeClient(new WebChromeClient() {
 
@@ -89,9 +93,11 @@ public class MainActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                     else
                         progressBar.setVisibility(View.VISIBLE);
+                    netcheck();
                     super.onProgressChanged(view, newProgress);
                 }
             });
+            netcheck();
 
 
         }
@@ -109,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         }
+
+        netcheck();
 
 //handle downloading
         try {
@@ -143,6 +151,8 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Something Went Wrong! Please Check Your Internet Connection...", Toast.LENGTH_LONG).show();
         }
 
+        netcheck();
+
     }
 
 
@@ -176,6 +186,27 @@ public class MainActivity extends AppCompatActivity {
                 backToast.show();
             }
             backPressedTime = System.currentTimeMillis();
+        }
+
+    }
+
+    private void netcheck() {
+
+        if (!CheckNetwork.isInternetAvailable(this)) //returns true if internet available
+        {
+
+            new AlertDialog.Builder(this) //alert the person knowing they are about to close
+                    .setTitle("No internet connection available")
+                    .setMessage("Please Check you're Mobile data or Wifi network.")
+                    .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            webview.setVisibility(View.INVISIBLE);
+                            finish();
+                        }
+                    })
+                    //.setNegativeButton("No", null)
+                    .show();
         }
 
     }

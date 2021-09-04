@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "497624450992",
+    "project_id": "maha360-6fc21",
+    "storage_bucket": "maha360-6fc21.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:497624450992:android:ff7489521f9b1fe5937875",
+        "android_client_info": {
+          "package_name": "com.study.maha360"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "497624450992-i4tsv6j8lh0h446eg7vl19teic60q5pl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDz-oA8ivZvtwOLcN3_ZmPnxtshUcvGsUk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "497624450992-i4tsv6j8lh0h446eg7vl19teic60q5pl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
