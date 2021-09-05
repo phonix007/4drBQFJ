@@ -7,29 +7,41 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.os.CountDownTimer;
+import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.OnUserEarnedRewardListener;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
+import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback;
+import com.google.android.gms.common.internal.Constants;
+
 import java.util.Locale;
 
+import static android.content.ContentValues.TAG;
 import static android.content.Context.MODE_PRIVATE;
 
 
-public class HomeFragment extends Fragment {
-    private static final long START_TIME_IN_MILLIS = 600000;
+public class HomeFragment extends Fragment implements OnUserEarnedRewardListener {
+    private static final long START_TIME_IN_MILLIS = 172800000; // Time for
 
     private CountDownTimer mCountDownTimer;
     private boolean mTimerRunning;
     private long mTimeLeftInMillis;
     private long mEndTime;
     private TextView mTextViewCountDown;
-
 
     public HomeFragment() {
         // Required empty public constructor
@@ -41,6 +53,7 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        MobileAds.initialize(getContext());
 
         mTextViewCountDown = view.findViewById(R.id.text_view_countdown);
         view.findViewById(R.id.share).setOnClickListener(new View.OnClickListener() {
@@ -94,11 +107,38 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                startTimer();
+
+            }
+        });
+
+        view.findViewById(R.id.watch).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadAd();
+
             }
         });
 
         return view;
+    }
+
+    private void loadAd() {
+        RewardedInterstitialAd.load(getContext(), "ca-app-pub-3940256099942544/5354046379", new AdRequest.Builder().build(), new RewardedInterstitialAdLoadCallback() {
+            @Override
+            public void onAdLoaded(@NonNull RewardedInterstitialAd rewardedInterstitialAd) {
+                super.onAdLoaded(rewardedInterstitialAd);
+                rewardedInterstitialAd.show(getActivity(), HomeFragment.this::onUserEarnedReward);
+            }
+
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                super.onAdFailedToLoad(loadAdError);
+                loadAd();
+                resetTimer(); // temporary added this
+                startTimer();
+            }
+        });
+
     }
 
     @Override
@@ -132,9 +172,9 @@ public class HomeFragment extends Fragment {
             if (mTimeLeftInMillis < 0) {
                 mTimeLeftInMillis = 0;
                 mTimerRunning = false;
-                 minutes = (int) (mTimeLeftInMillis / 1000) / 60;
-                 seconds = (int) (mTimeLeftInMillis / 1000) % 60;
-              timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+                minutes = (int) (mTimeLeftInMillis / 1000) / 60;
+                seconds = (int) (mTimeLeftInMillis / 1000) % 60;
+                timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
                 mTextViewCountDown.setText(timeLeftFormatted);
 
             } else {
@@ -171,4 +211,15 @@ public class HomeFragment extends Fragment {
         mTimerRunning = true;
     }
 
+    private void resetTimer() {
+        mTimeLeftInMillis = START_TIME_IN_MILLIS;
+    }
+
+    @Override
+    public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+        resetTimer();
+        startTimer();
+
+        Toast.makeText(getContext(), "Unlimited Downloading Started...", Toast.LENGTH_SHORT).show();
+    }
 }
