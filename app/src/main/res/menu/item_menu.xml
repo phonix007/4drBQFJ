@@ -4,8 +4,8 @@
         android:title="Home"
         android:icon="@drawable/home"/>
 
-    <item android:id="@+id/nav_bitcoin"
-        android:title="Bitcoin"
+    <item android:id="@+id/nav_download"
+        android:title="Download"
         android:icon="@drawable/download"/>
 
 </menu>
