@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".HomeFragment">
+
+    <TextView
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="Maha 360 App"
+        android:textColor="@android:color/black"
+        android:textSize="45sp" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,16 +27,16 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:orientation="vertical"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:text="Unlimited Download Over In "
                 android:textColor="@android:color/black"
-                android:textSize="25sp"
-                android:padding="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:textSize="25sp" />
 
             <TextView
                 android:id="@+id/text_view_countdown"
@@ -33,15 +44,14 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="00:00"
-                android:gravity="center"
                 android:layout_gravity="center"
+                android:gravity="center"
+                android:text="00:00"
                 android:textColor="@android:color/black"
                 android:textSize="25sp" />
 
 
         </LinearLayout>
-
 
 
         <Button
@@ -52,9 +62,9 @@
             android:background="@drawable/rounded_cor"
             android:color="@android:color/transparent"
             android:text="Diploma"
-            android:textSize="16sp"
             android:textAllCaps="false"
             android:textColor="@color/black"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <Button
@@ -65,16 +75,16 @@
             android:background="@drawable/rounded_cor"
             android:color="@android:color/transparent"
             android:text="Degree"
-            android:textSize="16sp"
             android:textAllCaps="false"
             android:textColor="@color/black"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_marginTop="16dp"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <Button
@@ -82,15 +92,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:padding="10dp"
                 android:background="@drawable/rounded_cor"
                 android:color="@android:color/transparent"
                 android:drawableLeft="@drawable/share_btn"
                 android:drawablePadding="10dp"
-                android:textSize="16sp"
+                android:padding="10dp"
                 android:text="शेअर ऍप"
                 android:textAllCaps="false"
                 android:textColor="@color/black"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <Button
@@ -98,16 +108,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:padding="10dp"
                 android:background="@drawable/rounded_cor"
                 android:color="@android:color/transparent"
                 android:drawableLeft="@drawable/ic_telegram_black_24dp"
                 android:drawablePadding="10dp"
                 android:drawableTint="@color/black"
-                android:textSize="16sp"
+                android:padding="10dp"
                 android:text="टेलिग्राम चैनल जॉईन करा"
                 android:textAllCaps="false"
                 android:textColor="@color/black"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
         </LinearLayout>

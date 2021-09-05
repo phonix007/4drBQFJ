@@ -95,7 +95,6 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
 
                 startTimer();
-
             }
         });
 
@@ -171,7 +170,5 @@ public class HomeFragment extends Fragment {
         }.start();
         mTimerRunning = true;
     }
-
-
 
 }
