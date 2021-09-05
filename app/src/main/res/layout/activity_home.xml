@@ -70,6 +70,48 @@
             android:textColor="@color/black"
             android:textStyle="bold" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:padding="10dp"
+                android:background="@drawable/rounded_cor"
+                android:color="@android:color/transparent"
+                android:drawableLeft="@drawable/share_btn"
+                android:drawablePadding="10dp"
+                android:textSize="16sp"
+                android:text="शेअर ऍप"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/telegram"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:padding="10dp"
+                android:background="@drawable/rounded_cor"
+                android:color="@android:color/transparent"
+                android:drawableLeft="@drawable/ic_telegram_black_24dp"
+                android:drawablePadding="10dp"
+                android:drawableTint="@color/black"
+                android:textSize="16sp"
+                android:text="टेलिग्राम चैनल जॉईन करा"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
