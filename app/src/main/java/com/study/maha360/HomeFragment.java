@@ -35,13 +35,14 @@ import static android.content.Context.MODE_PRIVATE;
 
 
 public class HomeFragment extends Fragment implements OnUserEarnedRewardListener {
-    private static final long START_TIME_IN_MILLIS = 172800000; // Time for
+//    private static final long START_TIME_IN_MILLIS = 54000000; // Time for
 
     private CountDownTimer mCountDownTimer;
     private boolean mTimerRunning;
     private long mTimeLeftInMillis;
     private long mEndTime;
     private TextView mTextViewCountDown;
+    private long mStartTimeInMillis = 54000000 ;  // change here also
 
     public HomeFragment() {
         // Required empty public constructor
@@ -146,6 +147,8 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
         super.onStop();
         SharedPreferences prefs = this.getActivity().getSharedPreferences("prefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putLong("startTimeInMillis", mStartTimeInMillis);
         editor.putLong("millisLeft", mTimeLeftInMillis);
         editor.putBoolean("timerRunning", mTimerRunning);
         editor.putLong("endTime", mEndTime);
@@ -159,11 +162,22 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
     public void onStart() {
         super.onStart();
         SharedPreferences prefs = this.getActivity().getSharedPreferences("prefs", MODE_PRIVATE);
-        mTimeLeftInMillis = prefs.getLong("millisLeft", START_TIME_IN_MILLIS);
+
+        mStartTimeInMillis = prefs.getLong("startTimeInMillis", 54000000);  // change time here also
+        mTimeLeftInMillis = prefs.getLong("millisLeft", mStartTimeInMillis);
         mTimerRunning = prefs.getBoolean("timerRunning", false);
-        int minutes = (int) (mTimeLeftInMillis / 1000) / 60;
+
+        int hours = (int) (mTimeLeftInMillis / 1000) / 3600;
+        int minutes = (int) ((mTimeLeftInMillis / 1000) % 3600) / 60;
         int seconds = (int) (mTimeLeftInMillis / 1000) % 60;
-        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+        String timeLeftFormatted;
+        if (hours > 0) {
+            timeLeftFormatted = String.format(Locale.getDefault(),
+                    "%d:%02d:%02d", hours, minutes, seconds);
+        } else {
+            timeLeftFormatted = String.format(Locale.getDefault(),
+                    "%02d:%02d", minutes, seconds);
+        }
         mTextViewCountDown.setText(timeLeftFormatted);
 
         if (mTimerRunning) {
@@ -172,9 +186,18 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
             if (mTimeLeftInMillis < 0) {
                 mTimeLeftInMillis = 0;
                 mTimerRunning = false;
-                minutes = (int) (mTimeLeftInMillis / 1000) / 60;
-                seconds = (int) (mTimeLeftInMillis / 1000) % 60;
-                timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+
+                 hours = (int) (mTimeLeftInMillis / 1000) / 3600;
+                 minutes = (int) ((mTimeLeftInMillis / 1000) % 3600) / 60;
+                 seconds = (int) (mTimeLeftInMillis / 1000) % 60;
+
+                if (hours > 0) {
+                    timeLeftFormatted = String.format(Locale.getDefault(),
+                            "%d:%02d:%02d", hours, minutes, seconds);
+                } else {
+                    timeLeftFormatted = String.format(Locale.getDefault(),
+                            "%02d:%02d", minutes, seconds);
+                }
                 mTextViewCountDown.setText(timeLeftFormatted);
 
             } else {
@@ -189,18 +212,35 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
             @Override
             public void onTick(long millisUntilFinished) {
                 mTimeLeftInMillis = millisUntilFinished;
-                int minutes = (int) (mTimeLeftInMillis / 1000) / 60;
+
+                int hours = (int) (mTimeLeftInMillis / 1000) / 3600;
+                int minutes = (int) ((mTimeLeftInMillis / 1000) % 3600) / 60;
                 int seconds = (int) (mTimeLeftInMillis / 1000) % 60;
-                String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+                String timeLeftFormatted;
+                if (hours > 0) {
+                    timeLeftFormatted = String.format(Locale.getDefault(),
+                            "%d:%02d:%02d", hours, minutes, seconds);
+                } else {
+                    timeLeftFormatted = String.format(Locale.getDefault(),
+                            "%02d:%02d", minutes, seconds);
+                }
                 mTextViewCountDown.setText(timeLeftFormatted);
             }
 
-            private void updateCountDownText() {
-                int minutes = (int) (mTimeLeftInMillis / 1000) / 60;
-                int seconds = (int) (mTimeLeftInMillis / 1000) % 60;
-                String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
-                mTextViewCountDown.setText(timeLeftFormatted);
-            }
+//            private void updateCountDownText() {
+//                int hours = (int) (mTimeLeftInMillis / 1000) / 3600;
+//                int minutes = (int) ((mTimeLeftInMillis / 1000) % 3600) / 60;
+//                int seconds = (int) (mTimeLeftInMillis / 1000) % 60;
+//                String timeLeftFormatted;
+//                if (hours > 0) {
+//                    timeLeftFormatted = String.format(Locale.getDefault(),
+//                            "%d:%02d:%02d", hours, minutes, seconds);
+//                } else {
+//                    timeLeftFormatted = String.format(Locale.getDefault(),
+//                            "%02d:%02d", minutes, seconds);
+//                }
+//                mTextViewCountDown.setText(timeLeftFormatted);
+//            }
 
             @Override
             public void onFinish() {
@@ -212,8 +252,23 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
     }
 
     private void resetTimer() {
-        mTimeLeftInMillis = START_TIME_IN_MILLIS;
+        mTimeLeftInMillis = mStartTimeInMillis;
+
+        int hours = (int) (mTimeLeftInMillis / 1000) / 3600;
+        int minutes = (int) ((mTimeLeftInMillis / 1000) % 3600) / 60;
+        int seconds = (int) (mTimeLeftInMillis / 1000) % 60;
+        String timeLeftFormatted;
+        if (hours > 0) {
+            timeLeftFormatted = String.format(Locale.getDefault(),
+                    "%d:%02d:%02d", hours, minutes, seconds);
+        } else {
+            timeLeftFormatted = String.format(Locale.getDefault(),
+                    "%02d:%02d", minutes, seconds);
+        }
+        mTextViewCountDown.setText(timeLeftFormatted);
     }
+
+
 
     @Override
     public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
