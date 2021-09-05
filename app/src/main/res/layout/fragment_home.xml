@@ -7,7 +7,6 @@
     tools:context=".HomeFragment">
 
     <TextView
-
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -15,7 +14,6 @@
         android:text="Maha 360 App"
         android:textColor="@android:color/black"
         android:textSize="45sp" />
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,31 +23,50 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <LinearLayout
+
+        <Button
+            android:id="@+id/video"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_margin="8dp"
+            android:background="@drawable/rounded_cor"
+            android:color="@android:color/transparent"
+            android:drawableRight="@drawable/ic_baseline_ondemand_video_24"
+            android:drawablePadding="10dp"
+            android:drawableTint="@color/black"
+            android:padding="15dp"
+            android:text="Watch Ad for Unlimited Download"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="Unlimited Download Over In "
-                android:textColor="@android:color/black"
-                android:textSize="25sp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/text_view_countdown"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="00:00"
-                android:textColor="@android:color/black"
-                android:textSize="25sp" />
 
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Unlimited Download Over In "
+            android:textColor="@android:color/black"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/text_view_countdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="00:00"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
 
         </LinearLayout>
 
@@ -97,7 +114,7 @@
                 android:drawableLeft="@drawable/share_btn"
                 android:drawablePadding="10dp"
                 android:padding="10dp"
-                android:text="शेअर ऍप"
+                android:text="Share App"
                 android:textAllCaps="false"
                 android:textColor="@color/black"
                 android:textSize="16sp"
@@ -114,7 +131,7 @@
                 android:drawablePadding="10dp"
                 android:drawableTint="@color/black"
                 android:padding="10dp"
-                android:text="टेलिग्राम चैनल जॉईन करा"
+                android:text="Join Telegram Channel"
                 android:textAllCaps="false"
                 android:textColor="@color/black"
                 android:textSize="16sp"
