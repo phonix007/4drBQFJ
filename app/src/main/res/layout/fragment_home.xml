@@ -15,130 +15,138 @@
         android:textColor="@android:color/black"
         android:textSize="32sp" />
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:paddingBottom="58dp">
 
-
-        <Button
-            android:id="@+id/watch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:background="@drawable/rounded_cor"
-            android:color="@android:color/transparent"
-            android:drawableRight="@drawable/ic_baseline_ondemand_video_24"
-            android:drawablePadding="10dp"
-            android:drawableTint="@color/black"
-            android:padding="15dp"
-            android:text="Watch Ad for Unlimited Download"
-            android:textAllCaps="false"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="Unlimited Download End In "
-            android:textColor="@android:color/black"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/text_view_countdown"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:text="00:00"
-            android:textColor="@android:color/black"
-            android:textSize="18sp" />
-
-        </LinearLayout>
-
-
-        <Button
-            android:id="@+id/diploma"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:background="@drawable/rounded_cor"
-            android:color="@android:color/transparent"
-            android:text="Diploma"
-            android:textAllCaps="false"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/degree"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:background="@drawable/rounded_cor"
-            android:color="@android:color/transparent"
-            android:text="Degree"
-            android:textAllCaps="false"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginTop="16dp"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:padding="16dp">
 
             <Button
-                android:id="@+id/share"
+                android:id="@+id/watch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:background="@drawable/rounded_cor"
                 android:color="@android:color/transparent"
-                android:drawableLeft="@drawable/share_btn"
-                android:drawablePadding="10dp"
-                android:padding="10dp"
-                android:text="Share App"
-                android:textAllCaps="false"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/telegram"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="@drawable/rounded_cor"
-                android:color="@android:color/transparent"
-                android:drawableLeft="@drawable/ic_telegram_black_24dp"
+                android:drawableRight="@drawable/ic_baseline_ondemand_video_24"
                 android:drawablePadding="10dp"
                 android:drawableTint="@color/black"
-                android:padding="10dp"
-                android:text="Join Telegram Channel"
+                android:padding="15dp"
+                android:text="Watch Ad for Unlimited Download"
                 android:textAllCaps="false"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="Unlimited Download End In "
+                    android:textColor="@android:color/black"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/text_view_countdown"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="00:00"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/diploma"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/rounded_cor"
+                android:color="@android:color/transparent"
+                android:text="Diploma"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/degree"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/rounded_cor"
+                android:color="@android:color/transparent"
+                android:text="Degree"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/share"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/rounded_cor"
+                    android:color="@android:color/transparent"
+                    android:drawableLeft="@drawable/share_btn"
+                    android:drawablePadding="10dp"
+                    android:padding="10dp"
+                    android:text="Share App"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/telegram"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/rounded_cor"
+                    android:color="@android:color/transparent"
+                    android:drawableLeft="@drawable/ic_telegram_black_24dp"
+                    android:drawablePadding="10dp"
+                    android:drawableTint="@color/black"
+                    android:padding="10dp"
+                    android:text="Join Telegram Channel"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

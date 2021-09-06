@@ -27,15 +27,32 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.OnUserEarnedRewardListener;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
+import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback;
 
 import java.io.File;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity {
+import static android.content.ContentValues.TAG;
+
+public class MainActivity extends AppCompatActivity implements OnUserEarnedRewardListener {
 
     String websiteURL;
     private WebView webview;
@@ -45,10 +62,64 @@ public class MainActivity extends AppCompatActivity {
     private Toast backToast;
     private int checkad;
 
+
+    private InterstitialAd mInterstitialAd;
+    private AdView mAdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        loadreward();
+
+        mAdView = findViewById(R.id.adView2_main);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        if (mAdView != null) {
+            mAdView.loadAd(adRequest);
+        }
+
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError adError) {
+                // Code to be executed when an ad request fails.
+                super.onAdFailedToLoad(adError);
+                mAdView.loadAd(adRequest);
+            }
+
+        });
+
+
+        InterstitialAd.load(this, "ca-app-pub-3940256099942544/1033173712", adRequest,
+                new InterstitialAdLoadCallback() {
+                    @Override
+                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                        // The mInterstitialAd reference will be null until
+                        // an ad is loaded.
+                        mInterstitialAd = interstitialAd;
+                        Log.i(TAG, "onAdLoaded");
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        // Handle the error
+                        Log.i(TAG, loadAdError.getMessage());
+                        mInterstitialAd = null;
+
+                    }
+                });
+
 
         websiteURL = getIntent().getStringExtra("url");
         Intent intent = getIntent();
@@ -120,8 +191,6 @@ public class MainActivity extends AppCompatActivity {
                 String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
                 requestPermissions(permissions, 1);
             }
-
-
         }
 
         netcheck();
@@ -151,16 +220,42 @@ public class MainActivity extends AppCompatActivity {
                     dm.enqueue(request);
                     Toast.makeText(getApplicationContext(), "Downloading File...", Toast.LENGTH_LONG).show();
 
+                    if (mInterstitialAd != null) {
+                        mInterstitialAd.show(MainActivity.this);
+                    } else {
+                        Log.d("TAG", "The interstitial ad wasn't ready yet.");
+                    }
+
                 }
             });
 
         } catch (Exception e) {
-            Toast.makeText(MainActivity.this, "Something Went Wrong! Please Check Your Internet Connection...", Toast.LENGTH_LONG).show();
-            Toast.makeText(MainActivity.this, "Something Went Wrong! Please Check Your Internet Connection...", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "Something Went Wrong!", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "Please Check Your Internet Connection...", Toast.LENGTH_LONG).show();
         }
-
         netcheck();
+    }
 
+    private void loadreward() {
+        RewardedInterstitialAd.load(MainActivity.this, "ca-app-pub-3940256099942544/5354046379", new AdRequest.Builder().build(), new RewardedInterstitialAdLoadCallback() {
+            @Override
+            public void onAdLoaded(@NonNull RewardedInterstitialAd rewardedInterstitialAd) {
+                super.onAdLoaded(rewardedInterstitialAd);
+                rewardedInterstitialAd.show(MainActivity.this, MainActivity.this::onUserEarnedReward);
+            }
+
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                super.onAdFailedToLoad(loadAdError);
+                loadreward();
+
+            }
+        });
+    }
+
+    @Override
+    public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+        Toast.makeText(this, "Unlimited Downloading Started...", Toast.LENGTH_SHORT).show();
     }
 
 

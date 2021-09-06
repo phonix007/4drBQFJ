@@ -44,7 +44,7 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
     private TextView mTextViewCountDown;
     private String eurl;
     private int checkad;
-    private long mStartTimeInMillis = 43200000 ;  // change here also
+    private long mStartTimeInMillis = 43200000;  // change here also
 
     public HomeFragment() {
         // Required empty public constructor
@@ -56,7 +56,6 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        MobileAds.initialize(getContext());
 
         if (checkad == 10) {
             mTimerRunning = true;
@@ -136,10 +135,10 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
         view.findViewById(R.id.diploma).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(),MainActivity.class);
+                Intent intent = new Intent(getContext(), MainActivity.class);
                 eurl = "https://drive.google.com/folderview?id=1gQIr4lskuLbpqHQU1U05S88r9pMcINCi";
-                intent.putExtra("url",eurl);
-                intent.putExtra("ad",checkad);
+                intent.putExtra("url", eurl);
+                intent.putExtra("ad", checkad);
                 startActivity(intent);
 
 
@@ -149,10 +148,10 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
         view.findViewById(R.id.degree).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(),MainActivity.class);
+                Intent intent = new Intent(getContext(), MainActivity.class);
                 eurl = "https://drive.google.com/drive/u/0/folders/0Bz9C0ysJZ7PnMGZKeWcybUpXWGM?resourcekey=0-S2yaWXvAG7ObM_GC8LRNTQ";
-                intent.putExtra("url",eurl);
-                intent.putExtra("ad",checkad);
+                intent.putExtra("url", eurl);
+                intent.putExtra("ad", checkad);
                 startActivity(intent);
 
             }
@@ -228,9 +227,9 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
                 mTimerRunning = false;
                 checkad = 20;
 
-                 hours = (int) (mTimeLeftInMillis / 1000) / 3600;
-                 minutes = (int) ((mTimeLeftInMillis / 1000) % 3600) / 60;
-                 seconds = (int) (mTimeLeftInMillis / 1000) % 60;
+                hours = (int) (mTimeLeftInMillis / 1000) / 3600;
+                minutes = (int) ((mTimeLeftInMillis / 1000) % 3600) / 60;
+                seconds = (int) (mTimeLeftInMillis / 1000) % 60;
 
                 if (hours > 0) {
                     timeLeftFormatted = String.format(Locale.getDefault(),
@@ -312,7 +311,6 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
         }
         mTextViewCountDown.setText(timeLeftFormatted);
     }
-
 
 
     @Override
