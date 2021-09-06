@@ -36,7 +36,7 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
-    String websiteURL = "https://drive.google.com/drive/u/0/folders/0Bz9C0ysJZ7PnMGZKeWcybUpXWGM?resourcekey=0-S2yaWXvAG7ObM_GC8LRNTQ"; // sets web url
+    String websiteURL;
     private WebView webview;
     private ProgressBar progressBar;
 
@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        websiteURL = getIntent().getStringExtra("url");
 
         progressBar = findViewById(R.id.progress_bar);
         progressBar.setMax(100);
