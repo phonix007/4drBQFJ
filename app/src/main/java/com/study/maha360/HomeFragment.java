@@ -35,7 +35,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 
 public class HomeFragment extends Fragment implements OnUserEarnedRewardListener {
-//    private static final long START_TIME_IN_MILLIS = 54000000; // Time for
+//    private static final long START_TIME_IN_MILLIS = 43200000; // Time for
 
     private CountDownTimer mCountDownTimer;
     private boolean mTimerRunning;
@@ -44,7 +44,7 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
     private TextView mTextViewCountDown;
     private String eurl;
     private int checkad;
-    private long mStartTimeInMillis = 54000000 ;  // change here also
+    private long mStartTimeInMillis = 43200000 ;  // change here also
 
     public HomeFragment() {
         // Required empty public constructor
@@ -202,7 +202,7 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
         super.onStart();
         SharedPreferences prefs = this.getActivity().getSharedPreferences("prefs", MODE_PRIVATE);
 
-        mStartTimeInMillis = prefs.getLong("startTimeInMillis", 54000000);  // change time here also
+        mStartTimeInMillis = prefs.getLong("startTimeInMillis", 43200000);  // change time here also
         mTimeLeftInMillis = prefs.getLong("millisLeft", mStartTimeInMillis);
         mTimerRunning = prefs.getBoolean("timerRunning", false); //
 
@@ -320,7 +320,7 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
         resetTimer();
         startTimer();
 
-        Toast.makeText(getContext(), "Unlimited Downloading Started...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Unlimited Downloading Started...", Toast.LENGTH_LONG).show();
         mTimerRunning = true;
         if (mTimerRunning) {
             mTimerRunning = true;
