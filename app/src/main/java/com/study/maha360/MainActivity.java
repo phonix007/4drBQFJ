@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     private long backPressedTime;
     private Toast backToast;
+    private int checkad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         websiteURL = getIntent().getStringExtra("url");
+        Intent intent = getIntent();
+        int check = intent.getIntExtra("ad", 0);
+        checkad = check;
+        Toast.makeText(this, "Value is" + checkad + check, Toast.LENGTH_SHORT).show();
 
         progressBar = findViewById(R.id.progress_bar);
         progressBar.setMax(100);

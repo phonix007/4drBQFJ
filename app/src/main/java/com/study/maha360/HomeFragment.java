@@ -43,6 +43,7 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
     private long mEndTime;
     private TextView mTextViewCountDown;
     private String eurl;
+    private int checkad;
     private long mStartTimeInMillis = 54000000 ;  // change here also
 
     public HomeFragment() {
@@ -56,6 +57,15 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         MobileAds.initialize(getContext());
+
+        if (checkad == 10) {
+            mTimerRunning = true;
+            checkad = 10;
+        } else {
+            mTimerRunning = false;
+            checkad = 20;
+        }
+
 
         mTextViewCountDown = view.findViewById(R.id.text_view_countdown);
         view.findViewById(R.id.share).setOnClickListener(new View.OnClickListener() {
@@ -105,12 +115,31 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
             }
         });
 
+        view.findViewById(R.id.watch).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "Please wait a movment...", Toast.LENGTH_LONG).show();
+                loadAd();
+
+
+            }
+        });
+
+        if (checkad == 10) {
+            mTimerRunning = true;
+            checkad = 10;
+        } else {
+            mTimerRunning = false;
+            checkad = 20;
+        }
+
         view.findViewById(R.id.diploma).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(),MainActivity.class);
                 eurl = "https://drive.google.com/folderview?id=1gQIr4lskuLbpqHQU1U05S88r9pMcINCi";
                 intent.putExtra("url",eurl);
+                intent.putExtra("ad",checkad);
                 startActivity(intent);
 
 
@@ -123,15 +152,8 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
                 Intent intent = new Intent(getContext(),MainActivity.class);
                 eurl = "https://drive.google.com/drive/u/0/folders/0Bz9C0ysJZ7PnMGZKeWcybUpXWGM?resourcekey=0-S2yaWXvAG7ObM_GC8LRNTQ";
                 intent.putExtra("url",eurl);
+                intent.putExtra("ad",checkad);
                 startActivity(intent);
-
-            }
-        });
-
-        view.findViewById(R.id.watch).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadAd();
 
             }
         });
@@ -144,6 +166,7 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
             @Override
             public void onAdLoaded(@NonNull RewardedInterstitialAd rewardedInterstitialAd) {
                 super.onAdLoaded(rewardedInterstitialAd);
+
                 rewardedInterstitialAd.show(getActivity(), HomeFragment.this::onUserEarnedReward);
             }
 
@@ -181,7 +204,7 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
 
         mStartTimeInMillis = prefs.getLong("startTimeInMillis", 54000000);  // change time here also
         mTimeLeftInMillis = prefs.getLong("millisLeft", mStartTimeInMillis);
-        mTimerRunning = prefs.getBoolean("timerRunning", false);
+        mTimerRunning = prefs.getBoolean("timerRunning", false); //
 
         int hours = (int) (mTimeLeftInMillis / 1000) / 3600;
         int minutes = (int) ((mTimeLeftInMillis / 1000) % 3600) / 60;
@@ -199,9 +222,11 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
         if (mTimerRunning) {
             mEndTime = prefs.getLong("endTime", 0);
             mTimeLeftInMillis = mEndTime - System.currentTimeMillis();
+
             if (mTimeLeftInMillis < 0) {
                 mTimeLeftInMillis = 0;
                 mTimerRunning = false;
+                checkad = 20;
 
                  hours = (int) (mTimeLeftInMillis / 1000) / 3600;
                  minutes = (int) ((mTimeLeftInMillis / 1000) % 3600) / 60;
@@ -228,6 +253,8 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
             @Override
             public void onTick(long millisUntilFinished) {
                 mTimeLeftInMillis = millisUntilFinished;
+                mTimerRunning = true;
+                checkad = 10;
 
                 int hours = (int) (mTimeLeftInMillis / 1000) / 3600;
                 int minutes = (int) ((mTimeLeftInMillis / 1000) % 3600) / 60;
@@ -261,10 +288,12 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
             @Override
             public void onFinish() {
                 mTimerRunning = false;
+                checkad = 20;
 
             }
         }.start();
         mTimerRunning = true;
+        checkad = 10;
     }
 
     private void resetTimer() {
@@ -292,5 +321,13 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
         startTimer();
 
         Toast.makeText(getContext(), "Unlimited Downloading Started...", Toast.LENGTH_SHORT).show();
+        mTimerRunning = true;
+        if (mTimerRunning) {
+            mTimerRunning = true;
+            checkad = 10;
+        } else {
+            mTimerRunning = false;
+            checkad = 20;
+        }
     }
 }
