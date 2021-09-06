@@ -21,6 +21,8 @@ import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
 import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
@@ -76,8 +78,6 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
             public void onInitializationComplete(InitializationStatus initializationStatus) {
             }
         });
-
-        loadreward();
 
         mAdView = findViewById(R.id.adView2_main);
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -196,44 +196,63 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
         netcheck();
 
 //handle downloading
-        try {
-            webview.setDownloadListener(new DownloadListener() {
-                @Override
-                public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimeType, long contentLength) {
 
+            try {
+                webview.setDownloadListener(new DownloadListener() {
+                    @Override
+                    public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimeType, long contentLength) {
 
-                    String currentTime = java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
+                        if (checkad == 10) {
+                        String currentTime = java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
+                        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+                        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+                        request.setMimeType(mimeType);
+                        String cookies = CookieManager.getInstance().getCookie(url);
+                        String fileName = URLUtil.guessFileName(url, contentDisposition, mimeType);
+                        request.addRequestHeader("cookie", cookies);
+                        request.addRequestHeader("User-Agent", userAgent);
+                        request.setDescription("Saved On Storage/Downloads/");
+                        request.setTitle("Maha_360_App_" + currentTime + URLUtil.guessFileName(url, contentDisposition, mimeType));
+                        request.allowScanningByMediaScanner();
+                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "Maha_360_App_" + currentTime + URLUtil.guessFileName(url, contentDisposition, mimeType));
+                        DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                        dm.enqueue(request);
+                        Toast.makeText(getApplicationContext(), "Downloading File...", Toast.LENGTH_LONG).show();
+                            netcheck();
 
-                    DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-                    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
-                    request.setMimeType(mimeType);
-                    String cookies = CookieManager.getInstance().getCookie(url);
-                    String fileName = URLUtil.guessFileName(url, contentDisposition, mimeType);
-                    request.addRequestHeader("cookie", cookies);
-                    request.addRequestHeader("User-Agent", userAgent);
-                    request.setDescription("Saved On Storage/Downloads/");
-                    request.setTitle("Maha_360_App_" + currentTime + URLUtil.guessFileName(url, contentDisposition, mimeType));
-                    request.allowScanningByMediaScanner();
-                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "Maha_360_App_" + currentTime + URLUtil.guessFileName(url, contentDisposition, mimeType));
-                    DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-                    dm.enqueue(request);
-                    Toast.makeText(getApplicationContext(), "Downloading File...", Toast.LENGTH_LONG).show();
+                        if (mInterstitialAd != null) {
+                            mInterstitialAd.show(MainActivity.this);
+                        } else {
+                            Log.d("TAG", "The interstitial ad wasn't ready yet.");
+                        }
 
-                    if (mInterstitialAd != null) {
-                        mInterstitialAd.show(MainActivity.this);
                     } else {
-                        Log.d("TAG", "The interstitial ad wasn't ready yet.");
+                            netcheck();
+                        new AlertDialog.Builder(MainActivity.this) //alert the person knowing they are about to close
+                                .setTitle("Unlimited Downloading Over!")
+                                .setMessage("Every Time you need to watch an Ad Because \uD835\uDC18\uD835\uDC28\uD835\uDC2E\uD835\uDC2B \uD835\uDC14\uD835\uDC27\uD835\uDC25\uD835\uDC22\uD835\uDC26\uD835\uDC2D\uD835\uDC1E\uD835\uDC1D \uD835\uDC1D\uD835\uDC28\uD835\uDC30\uD835\uDC27\uD835\uDC25\uD835\uDC28\uD835\uDC1A\uD835\uDC1D\uD835\uDC22\uD835\uDC27\uD835\uDC20 \uD835\uDC22\uD835\uDC2C \uD835\uDC28\uD835\uDC2F\uD835\uDC1E\uD835\uDC2B Please, go to \uD835\uDC07\uD835\uDC28\uD835\uDC26\uD835\uDC1E \uD835\uDC12\uD835\uDC1C\uD835\uDC2B\uD835\uDC1E\uD835\uDC1E\uD835\uDC27 \uD835\uDC1A\uD835\uDC27\uD835\uDC1D \uD835\uDC00\uD835\uDC1C\uD835\uDC2D\uD835\uDC22\uD835\uDC2F\uD835\uDC1A\uD835\uDC2D\uD835\uDC1E \uD835\uDC14\uD835\uDC27\uD835\uDC25\uD835\uDC22\uD835\uDC26\uD835\uDC22\uD835\uDC2D\uD835\uDC1E\uD835\uDC1D \uD835\uDC03\uD835\uDC28\uD835\uDC30\uD835\uDC27\uD835\uDC25\uD835\uDC28\uD835\uDC1A\uD835\uDC1D\uD835\uDC22\uD835\uDC27\uD835\uDC20...")
+                                .setPositiveButton("Watch", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Toast.makeText(MainActivity.this, "Ad is Loading Please wait a movment ", Toast.LENGTH_LONG).show();
+                                        loadreward();
+                                    }
+                                })
+                                //.setNegativeButton("No", null)
+                                .show();
+
                     }
 
-                }
-            });
+                    }
+                });
 
-        } catch (Exception e) {
-            Toast.makeText(MainActivity.this, "Something Went Wrong!", Toast.LENGTH_LONG).show();
-            Toast.makeText(MainActivity.this, "Please Check Your Internet Connection...", Toast.LENGTH_LONG).show();
-        }
-        netcheck();
+            } catch (Exception e) {
+                Toast.makeText(MainActivity.this, "Something Went Wrong!", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Please Check Your Internet Connection...", Toast.LENGTH_LONG).show();
+            }
+            netcheck();
+
     }
 
     private void loadreward() {
@@ -247,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
-                loadreward();
+                Toast.makeText(MainActivity.this, "No Ads Found Please Try Again", Toast.LENGTH_LONG).show();
 
             }
         });
@@ -256,6 +275,9 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
     @Override
     public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
         Toast.makeText(this, "Unlimited Downloading Started...", Toast.LENGTH_SHORT).show();
+        checkad = 10;
+        Intent myIntent = new Intent(MainActivity.this, HomeFragment.class);
+        myIntent.putExtra("ooo", 10);
     }
 
 
@@ -264,11 +286,13 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
         //Keep webview in app when clicking links
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             view.loadUrl(url);
+//            netcheck();
             return true;
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
+//            netcheck();
             super.onPageFinished(view, url);
         }
     }
@@ -297,21 +321,45 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
 
         if (!CheckNetwork.isInternetAvailable(this)) //returns true if internet available
         {
+            webview = findViewById(R.id.webView);
+            webview.loadUrl("file:///android_asset/error.html");
 
-            new AlertDialog.Builder(this) //alert the person knowing they are about to close
-                    .setTitle("No internet connection available")
-                    .setMessage("Please Check you're Mobile data or Wifi network.")
-                    .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            webview.setVisibility(View.INVISIBLE);
-                            finish();
-                        }
-                    })
-                    //.setNegativeButton("No", null)
-                    .show();
+//            webview.setWebViewClient(new WebViewClient(){
+//
+//                @Override public void onReceivedError(WebView view, WebResourceRequest request,
+//                                                      WebResourceError error) {
+//                    super.onReceivedError(view, request, error);
+//                    webview.loadUrl("file:///android_asset/error.html");
+//                }
+//            });
+//            webview.loadUrl("file:///android_asset/error.html");
+
+//            new AlertDialog.Builder(this) //alert the person knowing they are about to close
+//                    .setTitle("No internet connection available")
+//                    .setMessage("Please Check you're Mobile data or Wifi network.")
+//                    .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            webview.setVisibility(View.INVISIBLE);
+//                            webview.setVisibility(View.GONE);
+//                            finish();
+//                        }
+//                    })
+//                    //.setNegativeButton("No", null)
+//                    .show();
         }
 
+    }
+    
+    private void loadu() {
+        webview = findViewById(R.id.webView);
+         webview.setWebViewClient(new WebViewClient(){
+                @Override public void onReceivedError(WebView view, WebResourceRequest request,
+                                                      WebResourceError error) {
+                    super.onReceivedError(view, request, error);
+                    webview.loadUrl("file:///android_asset/error.html");
+                }
+            });
     }
 }
 
@@ -325,14 +373,14 @@ class CheckNetwork {
                 context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
 
         if (info == null) {
-            Log.d(TAG, "no internet connection");
+//            Log.d(TAG, "no internet connection");
             return false;
         } else {
             if (info.isConnected()) {
-                Log.d(TAG, " internet connection available...");
+//                Log.d(TAG, " internet connection available...");
                 return true;
             } else {
-                Log.d(TAG, " internet connection");
+//                Log.d(TAG, " internet connection");
                 return true;
             }
 
