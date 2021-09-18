@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".HomeFragment">
 
@@ -31,6 +32,15 @@
             android:gravity="center"
             android:orientation="vertical"
             android:padding="16dp">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/animationView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:lottie_url="REPLACE_JSON_URL"
+                app:lottie_rawRes="@raw/learning"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"/>
 
             <Button
                 android:id="@+id/watch"
@@ -144,6 +154,10 @@
                     android:textStyle="bold" />
 
             </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="80dp"/>
 
         </LinearLayout>
 

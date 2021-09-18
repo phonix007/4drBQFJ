@@ -1,14 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     tools:context=".DownloadFragment">
-
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="Download"
+        android:textColor="@android:color/black"
+        android:textSize="32sp" />
 
-</FrameLayout>
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:paddingBottom="58dp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/animationView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:lottie_url="REPLACE_JSON_URL"
+                app:lottie_rawRes="@raw/download"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"/>
+            <ImageView
+                android:id="@+id/download"
+                android:layout_width="match_parent"
+                android:src="@drawable/download_ss"
+                android:layout_height="400dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:text="Download"
+                android:textSize="30sp"
+                android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:id="@+id/storage_ss"
+                android:layout_width="match_parent"
+                android:src="@drawable/storage"
+                android:layout_height="400dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:textSize="30sp"
+                android:text="Storage SS"
+                android:layout_height="wrap_content"/>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="80dp"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

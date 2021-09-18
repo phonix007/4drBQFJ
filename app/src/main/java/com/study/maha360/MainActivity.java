@@ -228,10 +228,10 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
                         new AlertDialog.Builder(MainActivity.this) //alert the person knowing they are about to close
                                 .setTitle("Unlimited Downloading Over!")
                                 .setMessage("Every Time you need to watch an Ad Because \uD835\uDC18\uD835\uDC28\uD835\uDC2E\uD835\uDC2B \uD835\uDC14\uD835\uDC27\uD835\uDC25\uD835\uDC22\uD835\uDC26\uD835\uDC2D\uD835\uDC1E\uD835\uDC1D \uD835\uDC1D\uD835\uDC28\uD835\uDC30\uD835\uDC27\uD835\uDC25\uD835\uDC28\uD835\uDC1A\uD835\uDC1D\uD835\uDC22\uD835\uDC27\uD835\uDC20 \uD835\uDC22\uD835\uDC2C \uD835\uDC28\uD835\uDC2F\uD835\uDC1E\uD835\uDC2B Please, go to \uD835\uDC07\uD835\uDC28\uD835\uDC26\uD835\uDC1E \uD835\uDC12\uD835\uDC1C\uD835\uDC2B\uD835\uDC1E\uD835\uDC1E\uD835\uDC27 \uD835\uDC1A\uD835\uDC27\uD835\uDC1D \uD835\uDC00\uD835\uDC1C\uD835\uDC2D\uD835\uDC22\uD835\uDC2F\uD835\uDC1A\uD835\uDC2D\uD835\uDC1E \uD835\uDC14\uD835\uDC27\uD835\uDC25\uD835\uDC22\uD835\uDC26\uD835\uDC22\uD835\uDC2D\uD835\uDC1E\uD835\uDC1D \uD835\uDC03\uD835\uDC28\uD835\uDC30\uD835\uDC27\uD835\uDC25\uD835\uDC28\uD835\uDC1A\uD835\uDC1D\uD835\uDC22\uD835\uDC27\uD835\uDC20...")
-                                .setPositiveButton("Watch", new DialogInterface.OnClickListener() {
+                                .setPositiveButton("Watch Ad", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        Toast.makeText(MainActivity.this, "Ad is Loading Please wait a movment ", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(MainActivity.this, "Ad is Loading Please wait a movement... ", Toast.LENGTH_LONG).show();
                                         loadreward();
                                     }
                                 })

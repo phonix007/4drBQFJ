@@ -136,7 +136,7 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), MainActivity.class);
-                eurl = "https://drive.google.com/folderview?id=1gQIr4lskuLbpqHQU1U05S88r9pMcINCi";
+                eurl = "https://drive.google.com/drive/folders/1MD4fBpaBoememAplzAsGztQID2Tu2XtK?usp=sharing";
                 intent.putExtra("url", eurl);
                 intent.putExtra("ad", checkad);
                 startActivity(intent);
