@@ -46,6 +46,12 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback;
+import com.google.android.play.core.review.ReviewInfo;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
+import com.google.android.play.core.tasks.OnCompleteListener;
+import com.google.android.play.core.tasks.OnSuccessListener;
+import com.google.android.play.core.tasks.Task;
 
 import java.io.File;
 import java.net.URL;
@@ -63,6 +69,9 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
     private long backPressedTime;
     private Toast backToast;
     private int checkad;
+
+    ReviewManager manager;
+    ReviewInfo reviewInfo;
 
 
     private InterstitialAd mInterstitialAd;
@@ -100,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
         });
 
 
-        InterstitialAd.load(this, "ca-app-pub-3940256099942544/1033173712", adRequest,
+        InterstitialAd.load(this, getString(R.string.intrestial), adRequest,
                 new InterstitialAdLoadCallback() {
                     @Override
                     public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
@@ -115,6 +124,29 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
                         // Handle the error
                         Log.i(TAG, loadAdError.getMessage());
                         mInterstitialAd = null;
+                        // review
+                        manager = ReviewManagerFactory.create(MainActivity.this);
+                        Task<ReviewInfo> request1 = manager.requestReviewFlow();
+                        request1.addOnCompleteListener(new OnCompleteListener<ReviewInfo>() {
+                            @Override
+                            public void onComplete(@NonNull Task<ReviewInfo> task) {
+
+                                if (task.isSuccessful()){
+                                    reviewInfo = task.getResult();
+                                    Task<Void> flow = manager.launchReviewFlow(MainActivity.this,reviewInfo);
+
+                                    flow.addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void result) {
+
+                                        }
+                                    });
+                                }else {
+                                    Toast.makeText(MainActivity.this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                        // review end
 
                     }
                 });
@@ -221,6 +253,29 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
                             mInterstitialAd.show(MainActivity.this);
                         } else {
                             Log.d("TAG", "The interstitial ad wasn't ready yet.");
+                            // review
+                            manager = ReviewManagerFactory.create(MainActivity.this);
+                            Task<ReviewInfo> request1 = manager.requestReviewFlow();
+                            request1.addOnCompleteListener(new OnCompleteListener<ReviewInfo>() {
+                                @Override
+                                public void onComplete(@NonNull Task<ReviewInfo> task) {
+
+                                    if (task.isSuccessful()){
+                                        reviewInfo = task.getResult();
+                                        Task<Void> flow = manager.launchReviewFlow(MainActivity.this,reviewInfo);
+
+                                        flow.addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void result) {
+
+                                            }
+                                        });
+                                    }else {
+                                        Toast.makeText(MainActivity.this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                            // review end
                         }
 
                     } else {
@@ -248,10 +303,35 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
         }
         netcheck();
 
+        // review
+        manager = ReviewManagerFactory.create(MainActivity.this);
+        Task<ReviewInfo> request = manager.requestReviewFlow();
+
+        request.addOnCompleteListener(new OnCompleteListener<ReviewInfo>() {
+            @Override
+            public void onComplete(@NonNull Task<ReviewInfo> task) {
+
+                if (task.isSuccessful()){
+                    reviewInfo = task.getResult();
+                    Task<Void> flow = manager.launchReviewFlow(MainActivity.this,reviewInfo);
+
+                    flow.addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void result) {
+
+                        }
+                    });
+                }else {
+                    Toast.makeText(MainActivity.this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        // review end
+
     }
 
     private void loadreward() {
-        RewardedInterstitialAd.load(MainActivity.this, "ca-app-pub-3940256099942544/5354046379", new AdRequest.Builder().build(), new RewardedInterstitialAdLoadCallback() {
+        RewardedInterstitialAd.load(MainActivity.this, getString(R.string.rr_int), new AdRequest.Builder().build(), new RewardedInterstitialAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull RewardedInterstitialAd rewardedInterstitialAd) {
                 super.onAdLoaded(rewardedInterstitialAd);
@@ -264,6 +344,29 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
 //                loadreward();  uncoment when adlimit gone
                 checkad = 10;
                 Toast.makeText(MainActivity.this, "No Ads Found Please Try Again", Toast.LENGTH_LONG).show();
+                // review
+                manager = ReviewManagerFactory.create(MainActivity.this);
+                Task<ReviewInfo> request1 = manager.requestReviewFlow();
+                request1.addOnCompleteListener(new OnCompleteListener<ReviewInfo>() {
+                    @Override
+                    public void onComplete(@NonNull Task<ReviewInfo> task) {
+
+                        if (task.isSuccessful()){
+                            reviewInfo = task.getResult();
+                            Task<Void> flow = manager.launchReviewFlow(MainActivity.this,reviewInfo);
+
+                            flow.addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void result) {
+
+                                }
+                            });
+                        }else {
+                            Toast.makeText(MainActivity.this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                // review end
             }
         });
     }
@@ -295,6 +398,29 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
         if (webview.isFocused() && webview.canGoBack()) { //check if in webview and the user can go back
             webview.goBack(); //go back in webview
         } else { //do this if the webview cannot go back any further
+            // review
+            manager = ReviewManagerFactory.create(MainActivity.this);
+            Task<ReviewInfo> request1 = manager.requestReviewFlow();
+            request1.addOnCompleteListener(new OnCompleteListener<ReviewInfo>() {
+                @Override
+                public void onComplete(@NonNull Task<ReviewInfo> task) {
+
+                    if (task.isSuccessful()){
+                        reviewInfo = task.getResult();
+                        Task<Void> flow = manager.launchReviewFlow(MainActivity.this,reviewInfo);
+
+                        flow.addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void result) {
+
+                            }
+                        });
+                    }else {
+                        Toast.makeText(MainActivity.this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            // review end
 
             if (backPressedTime + 2000 > System.currentTimeMillis()) {
                 backToast.cancel();

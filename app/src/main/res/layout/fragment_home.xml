@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="Maha 360 App"
+        android:text="Maha360 App"
         android:textColor="@android:color/black"
         android:textSize="32sp" />
 
@@ -157,7 +157,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="80dp"/>
+                android:layout_height="100dp"/>
 
         </LinearLayout>
 

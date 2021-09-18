@@ -27,6 +27,12 @@ import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback;
 import com.google.android.gms.common.internal.Constants;
+import com.google.android.play.core.review.ReviewInfo;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
+import com.google.android.play.core.tasks.OnCompleteListener;
+import com.google.android.play.core.tasks.OnSuccessListener;
+import com.google.android.play.core.tasks.Task;
 
 import java.util.Locale;
 
@@ -45,6 +51,8 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
     private String eurl;
     private int checkad;
     private long mStartTimeInMillis = 43200000;  // change here also
+    ReviewManager manager;
+    ReviewInfo reviewInfo;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -75,9 +83,7 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
                     Intent intent = new Intent(Intent.ACTION_SEND);
                     intent.setType("text/plain");
                     intent.putExtra(Intent.EXTRA_SUBJECT, " " + getString(R.string.app_name));
-                    String msg = "स्टॉक मार्केट, ट्रेडिंग अॅप हे मराठी लोकांमध्ये शेअर मार्केट, ट्रेडिंग आणि क्रिप्टोकरन्सी ज्ञान प्रदान करण्यासाठी आहे, जिथे तुम्ही स्टॉक मार्केट,ट्रेडिंग मराठी भाषेत शिकू शकता. हे अॅप तुम्हाला शेअर बाजारातील मूलभूत गोष्टी, प्रकारांसह कॅण्डल्स आणि मराठीत क्रिप्टोकरन्सी बद्दल माहिती पुरवते. \n" +
-                            "\n" +
-                            "शेअर मार्केट, ट्रेडिंग आणि क्रिप्टो करेंसी बद्दल माहिती मिळवण्यासाठी लगेच डाउनलोड करा \n https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID + "\n\n"; // Change your message
+                    String msg = "Hey, I found a nice app that have all the Question papers of MSBTE and SPPU. This is the best study resource app for MSBTE students, It have answers of manuals, question papers, model answer papers, syllabus, notes and many more download now \n https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID + "\n\n"; // Change your message
                     intent.putExtra(Intent.EXTRA_TEXT, msg);
                     startActivity(Intent.createChooser(intent, "Share App with your friends"));
                 } catch (Exception e) {
@@ -97,12 +103,12 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
                             .setPositiveButton("Diploma", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/joinchat/V3H9kU_aQwoOs-96")));
+                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/MSBTE_Guide")));
                                 }
                             })
                             .setNegativeButton("Degree", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/joinchat/V3H9kU_aQwoOs-96")));
+                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/SPPU_Group")));
                                 }
                             })
                             //.setNegativeButton("No", null)
@@ -161,7 +167,7 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
     }
 
     private void loadAd() {
-        RewardedInterstitialAd.load(getContext(), "ca-app-pub-3940256099942544/5354046379", new AdRequest.Builder().build(), new RewardedInterstitialAdLoadCallback() {
+        RewardedInterstitialAd.load(getContext(), getString(R.string.rr_int), new AdRequest.Builder().build(), new RewardedInterstitialAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull RewardedInterstitialAd rewardedInterstitialAd) {
                 super.onAdLoaded(rewardedInterstitialAd);
@@ -172,9 +178,33 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
-                loadAd();
                 resetTimer(); // temporary added this
                 startTimer();
+                // review
+                manager = ReviewManagerFactory.create(getActivity());
+                Task<ReviewInfo> request = manager.requestReviewFlow();
+                request.addOnCompleteListener(new OnCompleteListener<ReviewInfo>() {
+                    @Override
+                    public void onComplete(@NonNull Task<ReviewInfo> task) {
+
+                        if (task.isSuccessful()){
+                            reviewInfo = task.getResult();
+                            Task<Void> flow = manager.launchReviewFlow(getActivity(),reviewInfo);
+
+                            flow.addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void result) {
+
+                                }
+                            });
+                        }else {
+                            Toast.makeText(getActivity(), "Something Went Wrong", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                // review end
+                loadAd();
+
             }
         });
 
