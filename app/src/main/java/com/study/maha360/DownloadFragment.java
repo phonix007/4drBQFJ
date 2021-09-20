@@ -1,5 +1,7 @@
 package com.study.maha360;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -36,6 +38,17 @@ public class DownloadFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_download, container, false);
 
-        return inflater.inflate(R.layout.fragment_download, container, false);
+        view.findViewById(R.id.google).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://forms.gle/MUhFt7LWDHsFeyod9"))); // Add
+                }catch (Exception e){
+                    Toast.makeText(getContext(), "Something Went Wrong", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        return view;
     }
 }

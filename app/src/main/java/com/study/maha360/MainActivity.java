@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
         Intent intent = getIntent();
         int check = intent.getIntExtra("ad", 0);
         checkad = check;
-        Toast.makeText(this, "Value is" + checkad + check, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Value is" + checkad + check, Toast.LENGTH_SHORT).show();
 
         progressBar = findViewById(R.id.progress_bar);
         progressBar.setMax(100);

@@ -80,6 +80,26 @@
 7. We are sorry because the file's name is get changed to a random name we can't do anything from our end this is the problem from android, that's why if you download any file from Telegram it's name gets changed."
                 android:textSize="22sp" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:text="Notes are not found?\nCheck In Common Subject folder or Fill the following Google Form "/>
+
+            <Button
+                android:id="@+id/google"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/rounded_cor"
+                android:color="@android:color/transparent"
+                android:text="Contact Us/Request Notes"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="100dp" />
