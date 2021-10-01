@@ -82,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        MediationTestSuite.launch(MainActivity.this);
+
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
@@ -302,32 +304,6 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
             Toast.makeText(MainActivity.this, "Please Check Your Internet Connection...", Toast.LENGTH_LONG).show();
         }
         netcheck();
-
-        // review
-        manager = ReviewManagerFactory.create(MainActivity.this);
-        Task<ReviewInfo> request = manager.requestReviewFlow();
-
-        request.addOnCompleteListener(new OnCompleteListener<ReviewInfo>() {
-            @Override
-            public void onComplete(@NonNull Task<ReviewInfo> task) {
-
-                if (task.isSuccessful()){
-                    reviewInfo = task.getResult();
-                    Task<Void> flow = manager.launchReviewFlow(MainActivity.this,reviewInfo);
-
-                    flow.addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void result) {
-
-                        }
-                    });
-                }else {
-                    Toast.makeText(MainActivity.this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        // review end
-
     }
 
     private void loadreward() {
