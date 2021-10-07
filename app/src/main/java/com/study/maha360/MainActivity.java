@@ -52,6 +52,10 @@ import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.tasks.OnCompleteListener;
 import com.google.android.play.core.tasks.OnSuccessListener;
 import com.google.android.play.core.tasks.Task;
+import com.vungle.warren.InitCallback;
+import com.vungle.warren.LoadAdCallback;
+import com.vungle.warren.Vungle;
+import com.vungle.warren.error.VungleException;
 
 import java.io.File;
 import java.net.URL;
@@ -126,6 +130,37 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
                         // Handle the error
                         Log.i(TAG, loadAdError.getMessage());
                         mInterstitialAd = null;
+                        // sdk
+                        Vungle.init(getString(R.string.vengal_appid), getApplicationContext(), new InitCallback() {  // change app id
+                            @Override
+                            public void onSuccess() {
+
+                            }
+
+                            @Override
+                            public void onError(VungleException exception) {
+
+                            }
+
+                            @Override
+                            public void onAutoCacheAdAvailable(String placementId) {
+
+                            }
+                        });
+                        // interstial
+                        Vungle.loadAd(getString(R.string.vengal_interstial), new LoadAdCallback() {
+                            @Override
+                            public void onAdLoad(String placementId) {
+                                if ( Vungle.canPlayAd(getString(R.string.vengal_interstial))){
+                                    Vungle.playAd(getString(R.string.vengal_interstial),null,null);
+                                }
+                            }
+
+                            @Override
+                            public void onError(String placementId, VungleException exception) {
+
+                            }
+                        });
                         // review
                         manager = ReviewManagerFactory.create(MainActivity.this);
                         Task<ReviewInfo> request1 = manager.requestReviewFlow();
@@ -255,6 +290,37 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
                             mInterstitialAd.show(MainActivity.this);
                         } else {
                             Log.d("TAG", "The interstitial ad wasn't ready yet.");
+                            // sdk
+                            Vungle.init(getString(R.string.vengal_appid), getApplicationContext(), new InitCallback() {  // change app id
+                                @Override
+                                public void onSuccess() {
+
+                                }
+
+                                @Override
+                                public void onError(VungleException exception) {
+
+                                }
+
+                                @Override
+                                public void onAutoCacheAdAvailable(String placementId) {
+
+                                }
+                            });
+                            // interstial
+                            Vungle.loadAd(getString(R.string.vengal_interstial), new LoadAdCallback() {
+                                @Override
+                                public void onAdLoad(String placementId) {
+                                    if ( Vungle.canPlayAd(getString(R.string.vengal_interstial))){
+                                        Vungle.playAd(getString(R.string.vengal_interstial),null,null);
+                                    }
+                                }
+
+                                @Override
+                                public void onError(String placementId, VungleException exception) {
+
+                                }
+                            });
                             // review
                             manager = ReviewManagerFactory.create(MainActivity.this);
                             Task<ReviewInfo> request1 = manager.requestReviewFlow();
@@ -320,6 +386,37 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
 //                loadreward();  uncoment when adlimit gone
                 checkad = 10;
                 Toast.makeText(MainActivity.this, "No Ads Found Please Try Again", Toast.LENGTH_LONG).show();
+                // sdk
+                Vungle.init(getString(R.string.vengal_appid), getApplicationContext(), new InitCallback() {  // change app id
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError(VungleException exception) {
+
+                    }
+
+                    @Override
+                    public void onAutoCacheAdAvailable(String placementId) {
+
+                    }
+                });
+                // interstial
+                Vungle.loadAd(getString(R.string.vengal_interstial), new LoadAdCallback() {
+                    @Override
+                    public void onAdLoad(String placementId) {
+                        if ( Vungle.canPlayAd(getString(R.string.vengal_interstial))){
+                            Vungle.playAd(getString(R.string.vengal_interstial),null,null);
+                        }
+                    }
+
+                    @Override
+                    public void onError(String placementId, VungleException exception) {
+
+                    }
+                });
                 // review
                 manager = ReviewManagerFactory.create(MainActivity.this);
                 Task<ReviewInfo> request1 = manager.requestReviewFlow();

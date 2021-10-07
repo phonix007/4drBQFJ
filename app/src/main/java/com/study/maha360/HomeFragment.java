@@ -33,6 +33,10 @@ import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.tasks.OnCompleteListener;
 import com.google.android.play.core.tasks.OnSuccessListener;
 import com.google.android.play.core.tasks.Task;
+import com.vungle.warren.InitCallback;
+import com.vungle.warren.LoadAdCallback;
+import com.vungle.warren.Vungle;
+import com.vungle.warren.error.VungleException;
 
 import java.util.Locale;
 
@@ -50,7 +54,7 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
     private TextView mTextViewCountDown;
     private String eurl;
     private int checkad;
-    private long mStartTimeInMillis = 43200000;  // change here also
+    private long mStartTimeInMillis = 14400000;  // change here also
     ReviewManager manager;
     ReviewInfo reviewInfo;
 
@@ -180,6 +184,37 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
                 super.onAdFailedToLoad(loadAdError);
                 resetTimer(); // temporary added this
                 startTimer();
+                Toast.makeText(getActivity(), "No Ads Found", Toast.LENGTH_SHORT).show();
+                // sdk
+                Vungle.init(getString(R.string.vengal_appid), getContext(), new InitCallback() {  // change app id
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError(VungleException exception) {
+
+                    }
+
+                    @Override
+                    public void onAutoCacheAdAvailable(String placementId) {
+
+                    }
+                });
+                Vungle.loadAd(getString(R.string.vangel_video), new LoadAdCallback() {
+                    @Override
+                    public void onAdLoad(String placementId) {
+                        if ( Vungle.canPlayAd(getString(R.string.vangel_video))){
+                            Vungle.playAd(getString(R.string.vangel_video),null,null);
+                        }
+                    }
+
+                    @Override
+                    public void onError(String placementId, VungleException exception) {
+
+                    }
+                });
                 // review
                 manager = ReviewManagerFactory.create(getActivity());
                 Task<ReviewInfo> request = manager.requestReviewFlow();
@@ -203,7 +238,7 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
                     }
                 });
                 // review end
-                loadAd();
+//                loadAd();
 
             }
         });
@@ -231,7 +266,7 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
         super.onStart();
         SharedPreferences prefs = this.getActivity().getSharedPreferences("prefs", MODE_PRIVATE);
 
-        mStartTimeInMillis = prefs.getLong("startTimeInMillis", 43200000);  // change time here also
+        mStartTimeInMillis = prefs.getLong("startTimeInMillis", 14400000);  // change time here also
         mTimeLeftInMillis = prefs.getLong("millisLeft", mStartTimeInMillis);
         mTimerRunning = prefs.getBoolean("timerRunning", false); //
 

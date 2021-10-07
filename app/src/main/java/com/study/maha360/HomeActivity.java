@@ -63,7 +63,7 @@ public class HomeActivity extends AppCompatActivity implements InAppUpdateManage
             public void onAdFailedToLoad(LoadAdError adError) {
                 // Code to be executed when an ad request fails.
                 super.onAdFailedToLoad(adError);
-                mAdView.loadAd(adRequest);
+//                mAdView.loadAd(adRequest);
             }
 
         });

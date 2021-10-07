@@ -11,8 +11,8 @@ android {
         applicationId "com.study.maha360"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 3
-        versionName "1.2"
+        versionCode 4
+        versionName "1.3"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -57,6 +57,20 @@ dependencies {
 
     def lottieVersion = "3.4.0" //lotti files
     implementation "com.airbnb.android:lottie:$lottieVersion"
+
+    // Vungle SDK
+    implementation 'com.vungle:publisher-sdk-android:6.10.2'
+
+    implementation 'androidx.core:core:1.1.0'
+    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
+
+    // When appcompat is being used, core and localbroadcastmanager are the dependencies
+    // that is getting included
+    // implementation 'androidx.appcompat:appcompat:1.3.1'
+
+    // Recommended for SDK to be able to get Android Advertising ID
+    implementation 'com.google.android.gms:play-services-basement:17.6.0'
+    implementation 'com.google.android.gms:play-services-ads-identifier:17.0.1'
 
     implementation 'androidx.multidex:multidex:2.0.1'
 }
