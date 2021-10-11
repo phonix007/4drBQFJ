@@ -52,6 +52,7 @@ import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.tasks.OnCompleteListener;
 import com.google.android.play.core.tasks.OnSuccessListener;
 import com.google.android.play.core.tasks.Task;
+import com.startapp.mediation.admob.StartappAdapter;
 import com.vungle.warren.InitCallback;
 import com.vungle.warren.LoadAdCallback;
 import com.vungle.warren.Vungle;
@@ -113,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
             }
 
         });
-
 
         InterstitialAd.load(this, getString(R.string.intrestial), adRequest,
                 new InterstitialAdLoadCallback() {
