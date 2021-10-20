@@ -212,4 +212,75 @@ LineNumberTable, *Annotation*, EnclosingMethod
 -keepclassmembers class * {
     @android.webkit.JavascriptInterface <methods>;
 }
+# For communication with AdColony's WebView
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}
+# Keep ADCNative class members unobfuscated
+-keepclassmembers class com.adcolony.sdk.ADCNative** {
+    *;
+ }
+ -dontwarn com.facebook.ads.internal.**
+ -keeppackagenames com.facebook.*
+ -keep public class com.facebook.ads.** {*;}
+ -keep public class com.facebook.ads.**
+ { public protected *; }
+
+ # Keep filenames and line numbers for stack traces
+ -keepattributes SourceFile,LineNumberTable
+ # Keep JavascriptInterface for WebView bridge
+ -keepattributes JavascriptInterface
+ # Sometimes keepattributes is not enough to keep annotations
+ -keep class android.webkit.JavascriptInterface {
+    *;
+ }
+ # Keep all classes in Unity Ads package
+ -keep class com.unity3d.ads.** {
+    *;
+ }
+ # Keep all classes in Unity Services package
+ -keep class com.unity3d.services.** {
+    *;
+ }
+ -dontwarn com.google.ar.core.**
+ -dontwarn com.unity3d.services.**
+ -dontwarn com.ironsource.adapters.unityads.**
+
+ # Vungle
+ -keep class com.vungle.warren.** { *; }
+ -dontwarn com.vungle.warren.error.VungleError$ErrorCode
+ # Moat SDK
+ -keep class com.moat.** { *; }
+ -dontwarn com.moat.**
+ # Okio
+ -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+ # Retrofit
+ -dontwarn okio.**
+ -dontwarn retrofit2.Platform$Java8
+ # Gson
+ -keepattributes Signature
+ -keepattributes *Annotation*
+ -dontwarn sun.misc.**
+ -keep class com.google.gson.examples.android.model.** { *; }
+ -keep class * implements com.google.gson.TypeAdapterFactory
+ -keep class * implements com.google.gson.JsonSerializer
+ -keep class * implements com.google.gson.JsonDeserializer
+ # Google Android Advertising ID
+ -keep class com.google.android.gms.internal.** { *; }
+ -dontwarn com.google.android.gms.ads.identifier.**
+
+ -keep class com.startapp.** {
+       *;
+ }
+
+ -keep class com.truenet.** {
+       *;
+ }
+
+ -keepattributes Exceptions, InnerClasses, Signature, Deprecated, SourceFile,
+ LineNumberTable, *Annotation*, EnclosingMethod
+ -dontwarn android.webkit.JavascriptInterface
+ -dontwarn com.startapp.**
+
+ -dontwarn org.jetbrains.annotations.**
 

@@ -19,20 +19,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.OnUserEarnedRewardListener;
-import com.google.android.gms.ads.rewarded.RewardItem;
-import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
-import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback;
-import com.google.android.gms.common.internal.Constants;
 import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.tasks.OnCompleteListener;
 import com.google.android.play.core.tasks.OnSuccessListener;
 import com.google.android.play.core.tasks.Task;
+import com.ironsource.mediationsdk.IronSource;
+import com.ironsource.mediationsdk.logger.IronSourceError;
+import com.ironsource.mediationsdk.model.Placement;
+import com.ironsource.mediationsdk.sdk.RewardedVideoListener;
+import com.startapp.sdk.adsbase.StartAppAd;
 import com.vungle.warren.InitCallback;
 import com.vungle.warren.LoadAdCallback;
 import com.vungle.warren.Vungle;
@@ -42,9 +39,10 @@ import java.util.Locale;
 
 import static android.content.ContentValues.TAG;
 import static android.content.Context.MODE_PRIVATE;
+import static com.unity3d.services.core.properties.ClientProperties.getApplicationContext;
 
 
-public class HomeFragment extends Fragment implements OnUserEarnedRewardListener {
+public class HomeFragment extends Fragment  {
 //    private static final long START_TIME_IN_MILLIS = 43200000; // Time for
 
     private CountDownTimer mCountDownTimer;
@@ -67,6 +65,10 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        StartAppAd.disableSplash();
+
+        IronSource.init(getActivity(), "111f3449d", IronSource.AD_UNIT.REWARDED_VIDEO);
 
 
         if (checkad == 10) {
@@ -171,17 +173,46 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
     }
 
     private void loadAd() {
-        RewardedInterstitialAd.load(getContext(), getString(R.string.rr_int), new AdRequest.Builder().build(), new RewardedInterstitialAdLoadCallback() {
-            @Override
-            public void onAdLoaded(@NonNull RewardedInterstitialAd rewardedInterstitialAd) {
-                super.onAdLoaded(rewardedInterstitialAd);
 
-                rewardedInterstitialAd.show(getActivity(), HomeFragment.this::onUserEarnedReward);
+
+
+        IronSource.showRewardedVideo("DefaultRewardedVideo");
+        IronSource.setRewardedVideoListener(new RewardedVideoListener() {
+
+            @Override
+            public void onRewardedVideoAdOpened() {
             }
 
             @Override
-            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                super.onAdFailedToLoad(loadAdError);
+            public void onRewardedVideoAdClosed() {
+            }
+
+            @Override
+            public void onRewardedVideoAvailabilityChanged(boolean available) {
+                //Change the in-app 'Traffic Driver' state according to availability.
+            }
+
+            @Override
+            public void onRewardedVideoAdRewarded(Placement placement) {
+                // gift of users
+                resetTimer();
+                startTimer();
+
+                Toast.makeText(getContext(), "Unlimited Downloading Started...", Toast.LENGTH_LONG).show();
+                mTimerRunning = true;
+                if (mTimerRunning) {
+                    mTimerRunning = true;
+                    checkad = 10;
+                } else {
+                    mTimerRunning = false;
+                    checkad = 20;
+                }
+
+            }
+
+            @Override
+            public void onRewardedVideoAdShowFailed(IronSourceError error) {
+
                 resetTimer(); // temporary added this
                 startTimer();
                 Toast.makeText(getActivity(), "No Ads Found", Toast.LENGTH_SHORT).show();
@@ -212,6 +243,7 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
 
                     @Override
                     public void onError(String placementId, VungleException exception) {
+                        StartAppAd.showAd(getApplicationContext());
 
                     }
                 });
@@ -238,8 +270,20 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
                     }
                 });
                 // review end
-//                loadAd();
+                loadAd();
+            }
+            /*Invoked when the end user clicked on the RewardedVideo ad
+             */
+            @Override
+            public void onRewardedVideoAdClicked(Placement placement){
+            }
 
+            @Override
+            public void onRewardedVideoAdStarted(){
+            }
+            /* Invoked when the video ad finishes plating. */
+            @Override
+            public void onRewardedVideoAdEnded(){
             }
         });
 
@@ -378,19 +422,15 @@ public class HomeFragment extends Fragment implements OnUserEarnedRewardListener
     }
 
 
-    @Override
-    public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
-        resetTimer();
-        startTimer();
 
-        Toast.makeText(getContext(), "Unlimited Downloading Started...", Toast.LENGTH_LONG).show();
-        mTimerRunning = true;
-        if (mTimerRunning) {
-            mTimerRunning = true;
-            checkad = 10;
-        } else {
-            mTimerRunning = false;
-            checkad = 20;
-        }
+    public void onResume() {
+        super.onResume();
+        IronSource.onResume(getActivity());
+
+    }
+    public void onPause() {
+        super.onPause();
+        IronSource.onPause(getActivity());
+
     }
 }

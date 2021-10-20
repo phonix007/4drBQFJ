@@ -25,6 +25,7 @@ import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -33,26 +34,23 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.OnUserEarnedRewardListener;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-import com.google.android.gms.ads.interstitial.InterstitialAd;
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
-import com.google.android.gms.ads.rewarded.RewardItem;
-import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
-import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback;
+
 import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.tasks.OnCompleteListener;
 import com.google.android.play.core.tasks.OnSuccessListener;
 import com.google.android.play.core.tasks.Task;
-import com.startapp.mediation.admob.StartappAdapter;
+import com.ironsource.mediationsdk.ISBannerSize;
+import com.ironsource.mediationsdk.IronSource;
+import com.ironsource.mediationsdk.IronSourceBannerLayout;
+import com.ironsource.mediationsdk.logger.IronSourceError;
+import com.ironsource.mediationsdk.model.Placement;
+import com.ironsource.mediationsdk.sdk.BannerListener;
+import com.ironsource.mediationsdk.sdk.InterstitialListener;
+import com.ironsource.mediationsdk.sdk.RewardedVideoListener;
+
+import com.startapp.sdk.adsbase.StartAppAd;
 import com.vungle.warren.InitCallback;
 import com.vungle.warren.LoadAdCallback;
 import com.vungle.warren.Vungle;
@@ -65,7 +63,7 @@ import java.util.Date;
 
 import static android.content.ContentValues.TAG;
 
-public class MainActivity extends AppCompatActivity implements OnUserEarnedRewardListener {
+public class MainActivity extends AppCompatActivity  {
 
     String websiteURL;
     private WebView webview;
@@ -79,114 +77,143 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
     ReviewInfo reviewInfo;
 
 
-    private InterstitialAd mInterstitialAd;
-    private AdView mAdView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        MediationTestSuite.launch(MainActivity.this);
+        StartAppAd.disableSplash();
 
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+        IronSource.init(this, "111f3449d", IronSource.AD_UNIT.INTERSTITIAL);
+        IronSource.init(this, "111f3449d", IronSource.AD_UNIT.REWARDED_VIDEO);
+        IronSource.setMetaData("Facebook_IS_CacheFlag","IMAGE");
+
+
+        IronSource.loadInterstitial();
+        IronSource.setInterstitialListener(new InterstitialListener() {
             @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
-        });
+            public void onInterstitialAdReady() {
 
-        mAdView = findViewById(R.id.adView2_main);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        if (mAdView != null) {
-            mAdView.loadAd(adRequest);
-        }
-
-        mAdView.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
             }
 
             @Override
-            public void onAdFailedToLoad(LoadAdError adError) {
-                super.onAdFailedToLoad(adError);
-//                mAdView.loadAd(adRequest); // When adlimit gone start this line
-            }
+            public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
 
-        });
-
-        InterstitialAd.load(this, getString(R.string.intrestial), adRequest,
-                new InterstitialAdLoadCallback() {
+                // sdk
+                Vungle.init(getString(R.string.vengal_appid), getApplicationContext(), new InitCallback() {  // change app id
                     @Override
-                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-                        // The mInterstitialAd reference will be null until
-                        // an ad is loaded.
-                        mInterstitialAd = interstitialAd;
-                        Log.i(TAG, "onAdLoaded");
+                    public void onSuccess() {
+
                     }
 
                     @Override
-                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                        // Handle the error
-                        Log.i(TAG, loadAdError.getMessage());
-                        mInterstitialAd = null;
-                        // sdk
-                        Vungle.init(getString(R.string.vengal_appid), getApplicationContext(), new InitCallback() {  // change app id
-                            @Override
-                            public void onSuccess() {
+                    public void onError(VungleException exception) {
 
-                            }
+                    }
 
-                            @Override
-                            public void onError(VungleException exception) {
-
-                            }
-
-                            @Override
-                            public void onAutoCacheAdAvailable(String placementId) {
-
-                            }
-                        });
-                        // interstial
-                        Vungle.loadAd(getString(R.string.vengal_interstial), new LoadAdCallback() {
-                            @Override
-                            public void onAdLoad(String placementId) {
-                                if ( Vungle.canPlayAd(getString(R.string.vengal_interstial))){
-                                    Vungle.playAd(getString(R.string.vengal_interstial),null,null);
-                                }
-                            }
-
-                            @Override
-                            public void onError(String placementId, VungleException exception) {
-
-                            }
-                        });
-                        // review
-                        manager = ReviewManagerFactory.create(MainActivity.this);
-                        Task<ReviewInfo> request1 = manager.requestReviewFlow();
-                        request1.addOnCompleteListener(new OnCompleteListener<ReviewInfo>() {
-                            @Override
-                            public void onComplete(@NonNull Task<ReviewInfo> task) {
-
-                                if (task.isSuccessful()){
-                                    reviewInfo = task.getResult();
-                                    Task<Void> flow = manager.launchReviewFlow(MainActivity.this,reviewInfo);
-
-                                    flow.addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void result) {
-
-                                        }
-                                    });
-                                }else {
-                                    Toast.makeText(MainActivity.this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                        // review end
+                    @Override
+                    public void onAutoCacheAdAvailable(String placementId) {
 
                     }
                 });
+                // interstial
+                Vungle.loadAd(getString(R.string.vengal_interstial), new LoadAdCallback() {
+                    @Override
+                    public void onAdLoad(String placementId) {
+                        if ( Vungle.canPlayAd(getString(R.string.vengal_interstial))){
+                            Vungle.playAd(getString(R.string.vengal_interstial),null,null);
+                        }
+                    }
+
+                    @Override
+                    public void onError(String placementId, VungleException exception) {
+
+                    }
+                });
+                // review
+                manager = ReviewManagerFactory.create(MainActivity.this);
+                Task<ReviewInfo> request1 = manager.requestReviewFlow();
+                request1.addOnCompleteListener(new OnCompleteListener<ReviewInfo>() {
+                    @Override
+                    public void onComplete(@NonNull Task<ReviewInfo> task) {
+
+                        if (task.isSuccessful()){
+                            reviewInfo = task.getResult();
+                            Task<Void> flow = manager.launchReviewFlow(MainActivity.this,reviewInfo);
+
+                            flow.addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void result) {
+
+                                }
+                            });
+                        }else {
+                            Toast.makeText(MainActivity.this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                // review end
+
+            }
+
+            @Override
+            public void onInterstitialAdOpened() {
+
+            }
+
+            @Override
+            public void onInterstitialAdClosed() {
+
+            }
+
+            @Override
+            public void onInterstitialAdShowSucceeded() {
+
+            }
+
+            @Override
+            public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
+
+
+                // sdk
+                Vungle.init(getString(R.string.vengal_appid), getApplicationContext(), new InitCallback() {  // change app id
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError(VungleException exception) {
+
+                    }
+
+                    @Override
+                    public void onAutoCacheAdAvailable(String placementId) {
+
+                    }
+                });
+                // interstial
+                Vungle.loadAd(getString(R.string.vengal_interstial), new LoadAdCallback() {
+                    @Override
+                    public void onAdLoad(String placementId) {
+                        if ( Vungle.canPlayAd(getString(R.string.vengal_interstial))){
+                            Vungle.playAd(getString(R.string.vengal_interstial),null,null);
+                        }
+                    }
+
+                    @Override
+                    public void onError(String placementId, VungleException exception) {
+                        StartAppAd.showAd(getApplicationContext());
+                    }
+                });
+
+            }
+
+            @Override
+            public void onInterstitialAdClicked() {
+
+            }
+        });
 
 
         websiteURL = getIntent().getStringExtra("url");
@@ -286,65 +313,8 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
                         Toast.makeText(getApplicationContext(), "Downloading File...", Toast.LENGTH_LONG).show();
                         netcheck();
 
-                        if (mInterstitialAd != null) {
-                            mInterstitialAd.show(MainActivity.this);
-                        } else {
-                            Log.d("TAG", "The interstitial ad wasn't ready yet.");
-                            // sdk
-                            Vungle.init(getString(R.string.vengal_appid), getApplicationContext(), new InitCallback() {  // change app id
-                                @Override
-                                public void onSuccess() {
+                        IronSource.showInterstitial("DefaultInterstitial");
 
-                                }
-
-                                @Override
-                                public void onError(VungleException exception) {
-
-                                }
-
-                                @Override
-                                public void onAutoCacheAdAvailable(String placementId) {
-
-                                }
-                            });
-                            // interstial
-                            Vungle.loadAd(getString(R.string.vengal_interstial), new LoadAdCallback() {
-                                @Override
-                                public void onAdLoad(String placementId) {
-                                    if ( Vungle.canPlayAd(getString(R.string.vengal_interstial))){
-                                        Vungle.playAd(getString(R.string.vengal_interstial),null,null);
-                                    }
-                                }
-
-                                @Override
-                                public void onError(String placementId, VungleException exception) {
-
-                                }
-                            });
-                            // review
-                            manager = ReviewManagerFactory.create(MainActivity.this);
-                            Task<ReviewInfo> request1 = manager.requestReviewFlow();
-                            request1.addOnCompleteListener(new OnCompleteListener<ReviewInfo>() {
-                                @Override
-                                public void onComplete(@NonNull Task<ReviewInfo> task) {
-
-                                    if (task.isSuccessful()){
-                                        reviewInfo = task.getResult();
-                                        Task<Void> flow = manager.launchReviewFlow(MainActivity.this,reviewInfo);
-
-                                        flow.addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void result) {
-
-                                            }
-                                        });
-                                    }else {
-                                        Toast.makeText(MainActivity.this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                            // review end
-                        }
 
                     } else {
                         netcheck();
@@ -373,17 +343,34 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
     }
 
     private void loadreward() {
-        RewardedInterstitialAd.load(MainActivity.this, getString(R.string.rr_int), new AdRequest.Builder().build(), new RewardedInterstitialAdLoadCallback() {
+
+
+        IronSource.showRewardedVideo("DefaultRewardedVideo");
+        IronSource.setRewardedVideoListener(new RewardedVideoListener() {
+
             @Override
-            public void onAdLoaded(@NonNull RewardedInterstitialAd rewardedInterstitialAd) {
-                super.onAdLoaded(rewardedInterstitialAd);
-                rewardedInterstitialAd.show(MainActivity.this, MainActivity.this::onUserEarnedReward);
+            public void onRewardedVideoAdOpened() {
             }
 
             @Override
-            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                super.onAdFailedToLoad(loadAdError);
-//                loadreward();  uncoment when adlimit gone
+            public void onRewardedVideoAdClosed() {
+            }
+
+            @Override
+            public void onRewardedVideoAvailabilityChanged(boolean available) {
+                //Change the in-app 'Traffic Driver' state according to availability.
+            }
+
+            @Override
+            public void onRewardedVideoAdRewarded(Placement placement) {
+                // gift of users
+                checkad = 10;
+            }
+
+            @Override
+            public void onRewardedVideoAdShowFailed(IronSourceError error) {
+
+                //                loadreward();  uncoment when adlimit gone
                 checkad = 10;
                 Toast.makeText(MainActivity.this, "No Ads Found Please Try Again", Toast.LENGTH_LONG).show();
                 // sdk
@@ -441,13 +428,21 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
                 });
                 // review end
             }
-        });
-    }
+            /*Invoked when the end user clicked on the RewardedVideo ad
+             */
+            @Override
+            public void onRewardedVideoAdClicked(Placement placement){
+            }
 
-    @Override
-    public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
-        Toast.makeText(this, "Unlimited Downloading Started...", Toast.LENGTH_SHORT).show();
-        checkad = 10;
+            @Override
+            public void onRewardedVideoAdStarted(){
+            }
+            /* Invoked when the video ad finishes plating. */
+            @Override
+            public void onRewardedVideoAdEnded(){
+            }
+        });
+
     }
 
 
@@ -463,6 +458,17 @@ public class MainActivity extends AppCompatActivity implements OnUserEarnedRewar
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
         }
+    }
+
+    protected void onResume() {
+        super.onResume();
+        IronSource.onResume(this);
+
+    }
+    protected void onPause() {
+        super.onPause();
+        IronSource.onPause(this);
+
     }
 
     //set back button functionality

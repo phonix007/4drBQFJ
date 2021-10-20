@@ -20,6 +20,7 @@ import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.tasks.OnCompleteListener;
 import com.google.android.play.core.tasks.OnSuccessListener;
 import com.google.android.play.core.tasks.Task;
+import com.startapp.sdk.adsbase.StartAppAd;
 
 
 public class DownloadFragment extends Fragment {
@@ -37,6 +38,8 @@ public class DownloadFragment extends Fragment {
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_download, container, false);
+
+        StartAppAd.disableSplash();
 
         view.findViewById(R.id.google).setOnClickListener(new View.OnClickListener() {
             @Override

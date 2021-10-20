@@ -10,16 +10,20 @@ import android.os.CountDownTimer;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.LoadAdError;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.startapp.mediation.admob.StartappAdapter;
+import com.ironsource.mediationsdk.ISBannerSize;
+import com.ironsource.mediationsdk.IronSource;
+import com.ironsource.mediationsdk.IronSourceBannerLayout;
+import com.ironsource.mediationsdk.logger.IronSourceError;
+import com.ironsource.mediationsdk.sdk.BannerListener;
+import com.startapp.sdk.adsbase.StartAppAd;
+
 
 import java.util.Locale;
 
@@ -30,7 +34,7 @@ import eu.dkaratzas.android.inapp.update.InAppUpdateStatus;
 public class HomeActivity extends AppCompatActivity implements InAppUpdateManager.InAppUpdateHandler {
 
     BottomNavigationView navigationView;
-    private AdView mAdView;
+
 
     InAppUpdateManager inAppUpdateManager;
     private long backPressedTime;
@@ -42,6 +46,11 @@ public class HomeActivity extends AppCompatActivity implements InAppUpdateManage
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        StartAppAd.disableSplash();
+
+
+        IronSource.setMetaData("Facebook_IS_CacheFlag","IMAGE");
+
         inAppUpdateManager = InAppUpdateManager.Builder(this, 101)
                 .resumeUpdates(true)
                 .mode(Constants.UpdateMode.IMMEDIATE)   // Immdiate Means Forcefully Install And Felexiable means no thanks option
@@ -50,24 +59,6 @@ public class HomeActivity extends AppCompatActivity implements InAppUpdateManage
                 .handler(this);
         inAppUpdateManager.checkForAppUpdate();
 
-        mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
-
-        mAdView.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-            }
-
-            @Override
-            public void onAdFailedToLoad(LoadAdError adError) {
-                // Code to be executed when an ad request fails.
-                super.onAdFailedToLoad(adError);
-//                mAdView.loadAd(adRequest);
-            }
-
-        });
 
         navigationView = findViewById(R.id.bottom_navigation);
         getSupportFragmentManager().beginTransaction().replace(R.id.body_cointainer, new HomeFragment()).commit();
@@ -95,6 +86,17 @@ public class HomeActivity extends AppCompatActivity implements InAppUpdateManage
         });
 
 
+
+    }
+
+    protected void onResume() {
+        super.onResume();
+        IronSource.onResume(this);
+
+    }
+    protected void onPause() {
+        super.onPause();
+        IronSource.onPause(this);
 
     }
 
