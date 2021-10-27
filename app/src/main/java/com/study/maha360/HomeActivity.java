@@ -7,10 +7,12 @@ import androidx.fragment.app.Fragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,10 +28,19 @@ import com.startapp.sdk.adsbase.StartAppAd;
 
 
 import java.util.Locale;
+import com.adcolony.sdk.AdColony;
+import com.adcolony.sdk.AdColonyAdOptions;
+import com.adcolony.sdk.AdColonyAdSize;
+import com.adcolony.sdk.AdColonyAdView;
+import com.adcolony.sdk.AdColonyAdViewListener;
+import com.adcolony.sdk.AdColonyAppOptions;
+import com.adcolony.sdk.AdColonyZone;
 
 import eu.dkaratzas.android.inapp.update.Constants;
 import eu.dkaratzas.android.inapp.update.InAppUpdateManager;
 import eu.dkaratzas.android.inapp.update.InAppUpdateStatus;
+
+import static com.vungle.warren.ui.view.VungleWebClient.TAG;
 
 public class HomeActivity extends AppCompatActivity implements InAppUpdateManager.InAppUpdateHandler {
 
@@ -47,9 +58,6 @@ public class HomeActivity extends AppCompatActivity implements InAppUpdateManage
         setContentView(R.layout.activity_home);
 
         StartAppAd.disableSplash();
-
-
-        IronSource.setMetaData("Facebook_IS_CacheFlag","IMAGE");
 
         inAppUpdateManager = InAppUpdateManager.Builder(this, 101)
                 .resumeUpdates(true)
@@ -84,7 +92,6 @@ public class HomeActivity extends AppCompatActivity implements InAppUpdateManage
                 return true;
             }
         });
-
 
 
     }

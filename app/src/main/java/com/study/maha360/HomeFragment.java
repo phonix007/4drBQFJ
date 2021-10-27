@@ -29,7 +29,10 @@ import com.ironsource.mediationsdk.IronSource;
 import com.ironsource.mediationsdk.logger.IronSourceError;
 import com.ironsource.mediationsdk.model.Placement;
 import com.ironsource.mediationsdk.sdk.RewardedVideoListener;
+import com.startapp.sdk.adsbase.Ad;
 import com.startapp.sdk.adsbase.StartAppAd;
+import com.startapp.sdk.adsbase.adlisteners.AdEventListener;
+import com.startapp.sdk.adsbase.adlisteners.VideoListener;
 import com.vungle.warren.InitCallback;
 import com.vungle.warren.LoadAdCallback;
 import com.vungle.warren.Vungle;
@@ -52,7 +55,7 @@ public class HomeFragment extends Fragment  {
     private TextView mTextViewCountDown;
     private String eurl;
     private int checkad;
-    private long mStartTimeInMillis = 14400000;  // change here also
+    private long mStartTimeInMillis = 3600000;  // change here also
     ReviewManager manager;
     ReviewInfo reviewInfo;
 
@@ -68,6 +71,7 @@ public class HomeFragment extends Fragment  {
 
         StartAppAd.disableSplash();
 
+        IronSource.setMetaData("Facebook_IS_CacheFlag", "IMAGE");
         IronSource.init(getActivity(), "111f3449d", IronSource.AD_UNIT.REWARDED_VIDEO);
 
 
@@ -215,7 +219,7 @@ public class HomeFragment extends Fragment  {
 
                 resetTimer(); // temporary added this
                 startTimer();
-                Toast.makeText(getActivity(), "No Ads Found", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "No Ads Found, Unlimited Downloading Started...", Toast.LENGTH_SHORT).show();
                 // sdk
                 Vungle.init(getString(R.string.vengal_appid), getContext(), new InitCallback() {  // change app id
                     @Override
@@ -270,7 +274,7 @@ public class HomeFragment extends Fragment  {
                     }
                 });
                 // review end
-                loadAd();
+
             }
             /*Invoked when the end user clicked on the RewardedVideo ad
              */
@@ -310,7 +314,7 @@ public class HomeFragment extends Fragment  {
         super.onStart();
         SharedPreferences prefs = this.getActivity().getSharedPreferences("prefs", MODE_PRIVATE);
 
-        mStartTimeInMillis = prefs.getLong("startTimeInMillis", 14400000);  // change time here also
+        mStartTimeInMillis = prefs.getLong("startTimeInMillis", 3600000);  // change time here also
         mTimeLeftInMillis = prefs.getLong("millisLeft", mStartTimeInMillis);
         mTimerRunning = prefs.getBoolean("timerRunning", false); //
 

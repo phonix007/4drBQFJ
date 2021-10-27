@@ -47,23 +47,31 @@
         </LinearLayout>
     </ScrollView>
 
-    <RelativeLayout
+    <FrameLayout
+        android:id="@+id/banneradhome"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="58dp"
         android:layout_gravity="bottom"
-        app:layout_constraintBottom_toBottomOf="@+id/scrollView2"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints">
+        app:layout_constraintStart_toStartOf="parent">
 
-
-        <com.startapp.sdk.ads.banner.Banner
-            android:id="@+id/startAppBanner"
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:id="@+id/bannerContainer2"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true" />
+            android:layout_gravity="bottom"
+            android:visibility="visible" />
 
-    </RelativeLayout>
+        <!--        <com.startapp.sdk.ads.banner.Banner-->
+        <!--            android:id="@+id/startAppBanner"-->
+        <!--            android:layout_gravity="center"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_centerHorizontal="true" />-->
+
+    </FrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

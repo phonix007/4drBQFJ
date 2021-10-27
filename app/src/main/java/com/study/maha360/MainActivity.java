@@ -50,7 +50,10 @@ import com.ironsource.mediationsdk.sdk.BannerListener;
 import com.ironsource.mediationsdk.sdk.InterstitialListener;
 import com.ironsource.mediationsdk.sdk.RewardedVideoListener;
 
+import com.startapp.sdk.adsbase.Ad;
 import com.startapp.sdk.adsbase.StartAppAd;
+import com.startapp.sdk.adsbase.adlisteners.AdEventListener;
+import com.startapp.sdk.adsbase.adlisteners.VideoListener;
 import com.vungle.warren.InitCallback;
 import com.vungle.warren.LoadAdCallback;
 import com.vungle.warren.Vungle;
@@ -62,6 +65,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import static android.content.ContentValues.TAG;
+import static com.unity3d.services.core.properties.ClientProperties.getApplicationContext;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -83,6 +87,57 @@ public class MainActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_main);
 
         StartAppAd.disableSplash();
+
+        IronSource.setMetaData("Facebook_IS_CacheFlag", "IMAGE");
+
+        IronSource.init(this, "111f3449d", IronSource.AD_UNIT.BANNER);
+        final FrameLayout bannerContainer = findViewById(R.id.bannerContainer2);
+        IronSourceBannerLayout banner = IronSource.createBanner(this, ISBannerSize.BANNER);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT);
+        bannerContainer.addView(banner, 0, layoutParams);
+        banner.setBannerListener(new BannerListener() {
+            @Override
+            public void onBannerAdLoaded() {
+
+                banner.setVisibility(View.VISIBLE);
+
+            }
+
+            @Override
+            public void onBannerAdLoadFailed(IronSourceError error) {
+
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        bannerContainer.removeAllViews();
+                    }
+                });
+                IronSource.loadBanner(banner);
+            }
+
+            @Override
+            public void onBannerAdClicked() {
+
+            }
+
+            @Override
+            public void onBannerAdScreenPresented() {
+
+            }
+
+            @Override
+            public void onBannerAdScreenDismissed() {
+
+            }
+
+            @Override
+            public void onBannerAdLeftApplication() {
+
+            }
+        });
+        IronSource.loadBanner(banner,"DefaultBanner");
 
         IronSource.init(this, "111f3449d", IronSource.AD_UNIT.INTERSTITIAL);
         IronSource.init(this, "111f3449d", IronSource.AD_UNIT.REWARDED_VIDEO);
@@ -127,7 +182,7 @@ public class MainActivity extends AppCompatActivity  {
 
                     @Override
                     public void onError(String placementId, VungleException exception) {
-
+                        StartAppAd.showAd(getApplicationContext());
                     }
                 });
                 // review
@@ -401,7 +456,7 @@ public class MainActivity extends AppCompatActivity  {
 
                     @Override
                     public void onError(String placementId, VungleException exception) {
-
+                        StartAppAd.showAd(getApplicationContext());
                     }
                 });
                 // review
