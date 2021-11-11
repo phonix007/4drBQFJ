@@ -284,10 +284,13 @@ public class HomeFragment extends Fragment  {
 
             @Override
             public void onRewardedVideoAdStarted(){
+                resetTimer(); // temporary added this
+                startTimer();
             }
             /* Invoked when the video ad finishes plating. */
             @Override
             public void onRewardedVideoAdEnded(){
+
             }
         });
 

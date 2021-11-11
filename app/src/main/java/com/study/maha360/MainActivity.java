@@ -491,6 +491,7 @@ public class MainActivity extends AppCompatActivity  {
 
             @Override
             public void onRewardedVideoAdStarted(){
+                checkad = 10;
             }
             /* Invoked when the video ad finishes plating. */
             @Override
