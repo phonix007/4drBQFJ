@@ -54,10 +54,6 @@ import com.startapp.sdk.adsbase.Ad;
 import com.startapp.sdk.adsbase.StartAppAd;
 import com.startapp.sdk.adsbase.adlisteners.AdEventListener;
 import com.startapp.sdk.adsbase.adlisteners.VideoListener;
-import com.vungle.warren.InitCallback;
-import com.vungle.warren.LoadAdCallback;
-import com.vungle.warren.Vungle;
-import com.vungle.warren.error.VungleException;
 
 import java.io.File;
 import java.net.URL;
@@ -90,58 +86,8 @@ public class MainActivity extends AppCompatActivity  {
 
         IronSource.setMetaData("Facebook_IS_CacheFlag", "IMAGE");
 
-        IronSource.init(this, "111f3449d", IronSource.AD_UNIT.BANNER);
-        final FrameLayout bannerContainer = findViewById(R.id.bannerContainer2);
-        IronSourceBannerLayout banner = IronSource.createBanner(this, ISBannerSize.BANNER);
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT);
-        bannerContainer.addView(banner, 0, layoutParams);
-        banner.setBannerListener(new BannerListener() {
-            @Override
-            public void onBannerAdLoaded() {
-
-                banner.setVisibility(View.VISIBLE);
-
-            }
-
-            @Override
-            public void onBannerAdLoadFailed(IronSourceError error) {
-
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        bannerContainer.removeAllViews();
-                    }
-                });
-                IronSource.loadBanner(banner);
-            }
-
-            @Override
-            public void onBannerAdClicked() {
-
-            }
-
-            @Override
-            public void onBannerAdScreenPresented() {
-
-            }
-
-            @Override
-            public void onBannerAdScreenDismissed() {
-
-            }
-
-            @Override
-            public void onBannerAdLeftApplication() {
-
-            }
-        });
-        IronSource.loadBanner(banner,"DefaultBanner");
-
         IronSource.init(this, "111f3449d", IronSource.AD_UNIT.INTERSTITIAL);
         IronSource.init(this, "111f3449d", IronSource.AD_UNIT.REWARDED_VIDEO);
-        IronSource.setMetaData("Facebook_IS_CacheFlag","IMAGE");
 
 
         IronSource.loadInterstitial();
@@ -153,61 +99,7 @@ public class MainActivity extends AppCompatActivity  {
 
             @Override
             public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
-
-                // sdk
-                Vungle.init(getString(R.string.vengal_appid), getApplicationContext(), new InitCallback() {  // change app id
-                    @Override
-                    public void onSuccess() {
-
-                    }
-
-                    @Override
-                    public void onError(VungleException exception) {
-
-                    }
-
-                    @Override
-                    public void onAutoCacheAdAvailable(String placementId) {
-
-                    }
-                });
-                // interstial
-                Vungle.loadAd(getString(R.string.vengal_interstial), new LoadAdCallback() {
-                    @Override
-                    public void onAdLoad(String placementId) {
-                        if ( Vungle.canPlayAd(getString(R.string.vengal_interstial))){
-                            Vungle.playAd(getString(R.string.vengal_interstial),null,null);
-                        }
-                    }
-
-                    @Override
-                    public void onError(String placementId, VungleException exception) {
-                        StartAppAd.showAd(getApplicationContext());
-                    }
-                });
-                // review
-                manager = ReviewManagerFactory.create(MainActivity.this);
-                Task<ReviewInfo> request1 = manager.requestReviewFlow();
-                request1.addOnCompleteListener(new OnCompleteListener<ReviewInfo>() {
-                    @Override
-                    public void onComplete(@NonNull Task<ReviewInfo> task) {
-
-                        if (task.isSuccessful()){
-                            reviewInfo = task.getResult();
-                            Task<Void> flow = manager.launchReviewFlow(MainActivity.this,reviewInfo);
-
-                            flow.addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void result) {
-
-                                }
-                            });
-                        }else {
-                            Toast.makeText(MainActivity.this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-                // review end
+                checkad = 10;
 
             }
 
@@ -218,49 +110,20 @@ public class MainActivity extends AppCompatActivity  {
 
             @Override
             public void onInterstitialAdClosed() {
-
+                checkad = 10;
             }
 
             @Override
             public void onInterstitialAdShowSucceeded() {
-
+                checkad = 10;
             }
 
             @Override
             public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
-
-
-                // sdk
-                Vungle.init(getString(R.string.vengal_appid), getApplicationContext(), new InitCallback() {  // change app id
-                    @Override
-                    public void onSuccess() {
-
-                    }
-
-                    @Override
-                    public void onError(VungleException exception) {
-
-                    }
-
-                    @Override
-                    public void onAutoCacheAdAvailable(String placementId) {
-
-                    }
-                });
-                // interstial
-                Vungle.loadAd(getString(R.string.vengal_interstial), new LoadAdCallback() {
-                    @Override
-                    public void onAdLoad(String placementId) {
-                        if ( Vungle.canPlayAd(getString(R.string.vengal_interstial))){
-                            Vungle.playAd(getString(R.string.vengal_interstial),null,null);
-                        }
-                    }
-
-                    @Override
-                    public void onError(String placementId, VungleException exception) {
-                        StartAppAd.showAd(getApplicationContext());
-                    }
-                });
+                Toast.makeText(MainActivity.this, "File Downloaded Successfully", Toast.LENGTH_LONG).show();
+                checkad = 10;
+                Toast.makeText(getApplicationContext(), "We recommend you to read the PDF here in the state of downloading", Toast.LENGTH_LONG).show();
+                StartAppAd.showAd(getApplicationContext());
 
             }
 
@@ -348,8 +211,25 @@ public class MainActivity extends AppCompatActivity  {
             webview.setDownloadListener(new DownloadListener() {
                 @Override
                 public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimeType, long contentLength) {
+                    netcheck();
+                    loadreward();
+//                    if (checkad == 10) {
+//
+//                        netcheck();
+//                        new AlertDialog.Builder(MainActivity.this) //alert the person knowing they are about to close
+//                                .setTitle("Unlimited Downloading Over!")
+//                                .setMessage("Every Time you need to watch an Ad Because \uD835\uDC18\uD835\uDC28\uD835\uDC2E\uD835\uDC2B \uD835\uDC14\uD835\uDC27\uD835\uDC25\uD835\uDC22\uD835\uDC26\uD835\uDC2D\uD835\uDC1E\uD835\uDC1D \uD835\uDC1D\uD835\uDC28\uD835\uDC30\uD835\uDC27\uD835\uDC25\uD835\uDC28\uD835\uDC1A\uD835\uDC1D\uD835\uDC22\uD835\uDC27\uD835\uDC20 \uD835\uDC22\uD835\uDC2C \uD835\uDC28\uD835\uDC2F\uD835\uDC1E\uD835\uDC2B Please, go to \uD835\uDC07\uD835\uDC28\uD835\uDC26\uD835\uDC1E \uD835\uDC12\uD835\uDC1C\uD835\uDC2B\uD835\uDC1E\uD835\uDC1E\uD835\uDC27 \uD835\uDC1A\uD835\uDC27\uD835\uDC1D \uD835\uDC00\uD835\uDC1C\uD835\uDC2D\uD835\uDC22\uD835\uDC2F\uD835\uDC1A\uD835\uDC2D\uD835\uDC1E \uD835\uDC14\uD835\uDC27\uD835\uDC25\uD835\uDC22\uD835\uDC26\uD835\uDC22\uD835\uDC2D\uD835\uDC1E\uD835\uDC1D \uD835\uDC03\uD835\uDC28\uD835\uDC30\uD835\uDC27\uD835\uDC25\uD835\uDC28\uD835\uDC1A\uD835\uDC1D\uD835\uDC22\uD835\uDC27\uD835\uDC20...")
+//                                .setPositiveButton("Watch Ad", new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        Toast.makeText(MainActivity.this, "Ad is Loading Please wait a movement... ", Toast.LENGTH_LONG).show();
+//                                        loadreward();
+//                                    }
+//                                })
+//                                //.setNegativeButton("No", null)
+//                                .show();
+//                    }
 
-                    if (checkad == 10) {
                         String currentTime = java.text.DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
                         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
                         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
@@ -365,27 +245,8 @@ public class MainActivity extends AppCompatActivity  {
                         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "Maha_360_App_" + currentTime + URLUtil.guessFileName(url, contentDisposition, mimeType));
                         DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
                         dm.enqueue(request);
-                        Toast.makeText(getApplicationContext(), "Downloading File...", Toast.LENGTH_LONG).show();
-                        netcheck();
-
-                        IronSource.showInterstitial("DefaultInterstitial");
 
 
-                    } else {
-                        netcheck();
-                        new AlertDialog.Builder(MainActivity.this) //alert the person knowing they are about to close
-                                .setTitle("Unlimited Downloading Over!")
-                                .setMessage("Every Time you need to watch an Ad Because \uD835\uDC18\uD835\uDC28\uD835\uDC2E\uD835\uDC2B \uD835\uDC14\uD835\uDC27\uD835\uDC25\uD835\uDC22\uD835\uDC26\uD835\uDC2D\uD835\uDC1E\uD835\uDC1D \uD835\uDC1D\uD835\uDC28\uD835\uDC30\uD835\uDC27\uD835\uDC25\uD835\uDC28\uD835\uDC1A\uD835\uDC1D\uD835\uDC22\uD835\uDC27\uD835\uDC20 \uD835\uDC22\uD835\uDC2C \uD835\uDC28\uD835\uDC2F\uD835\uDC1E\uD835\uDC2B Please, go to \uD835\uDC07\uD835\uDC28\uD835\uDC26\uD835\uDC1E \uD835\uDC12\uD835\uDC1C\uD835\uDC2B\uD835\uDC1E\uD835\uDC1E\uD835\uDC27 \uD835\uDC1A\uD835\uDC27\uD835\uDC1D \uD835\uDC00\uD835\uDC1C\uD835\uDC2D\uD835\uDC22\uD835\uDC2F\uD835\uDC1A\uD835\uDC2D\uD835\uDC1E \uD835\uDC14\uD835\uDC27\uD835\uDC25\uD835\uDC22\uD835\uDC26\uD835\uDC22\uD835\uDC2D\uD835\uDC1E\uD835\uDC1D \uD835\uDC03\uD835\uDC28\uD835\uDC30\uD835\uDC27\uD835\uDC25\uD835\uDC28\uD835\uDC1A\uD835\uDC1D\uD835\uDC22\uD835\uDC27\uD835\uDC20...")
-                                .setPositiveButton("Watch Ad", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Toast.makeText(MainActivity.this, "Ad is Loading Please wait a movement... ", Toast.LENGTH_LONG).show();
-                                        loadreward();
-                                    }
-                                })
-                                //.setNegativeButton("No", null)
-                                .show();
-                    }
 
                 }
             });
@@ -419,7 +280,9 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void onRewardedVideoAdRewarded(Placement placement) {
                 // gift of users
+                Toast.makeText(MainActivity.this, "File Downloaded Successfully", Toast.LENGTH_LONG).show();
                 checkad = 10;
+                Toast.makeText(getApplicationContext(), "We recommend you to read the PDF here in the state of downloading", Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -427,61 +290,8 @@ public class MainActivity extends AppCompatActivity  {
 
                 //                loadreward();  uncoment when adlimit gone
                 checkad = 10;
-                Toast.makeText(MainActivity.this, "No Ads Found Please Try Again", Toast.LENGTH_LONG).show();
-                // sdk
-                Vungle.init(getString(R.string.vengal_appid), getApplicationContext(), new InitCallback() {  // change app id
-                    @Override
-                    public void onSuccess() {
+                IronSource.showInterstitial("DefaultInterstitial");
 
-                    }
-
-                    @Override
-                    public void onError(VungleException exception) {
-
-                    }
-
-                    @Override
-                    public void onAutoCacheAdAvailable(String placementId) {
-
-                    }
-                });
-                // interstial
-                Vungle.loadAd(getString(R.string.vengal_interstial), new LoadAdCallback() {
-                    @Override
-                    public void onAdLoad(String placementId) {
-                        if ( Vungle.canPlayAd(getString(R.string.vengal_interstial))){
-                            Vungle.playAd(getString(R.string.vengal_interstial),null,null);
-                        }
-                    }
-
-                    @Override
-                    public void onError(String placementId, VungleException exception) {
-                        StartAppAd.showAd(getApplicationContext());
-                    }
-                });
-                // review
-                manager = ReviewManagerFactory.create(MainActivity.this);
-                Task<ReviewInfo> request1 = manager.requestReviewFlow();
-                request1.addOnCompleteListener(new OnCompleteListener<ReviewInfo>() {
-                    @Override
-                    public void onComplete(@NonNull Task<ReviewInfo> task) {
-
-                        if (task.isSuccessful()){
-                            reviewInfo = task.getResult();
-                            Task<Void> flow = manager.launchReviewFlow(MainActivity.this,reviewInfo);
-
-                            flow.addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void result) {
-
-                                }
-                            });
-                        }else {
-                            Toast.makeText(MainActivity.this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-                // review end
             }
             /*Invoked when the end user clicked on the RewardedVideo ad
              */
@@ -491,11 +301,14 @@ public class MainActivity extends AppCompatActivity  {
 
             @Override
             public void onRewardedVideoAdStarted(){
+                Toast.makeText(getApplicationContext(), "Downloading File...", Toast.LENGTH_LONG).show();
+
                 checkad = 10;
             }
             /* Invoked when the video ad finishes plating. */
             @Override
             public void onRewardedVideoAdEnded(){
+
             }
         });
 

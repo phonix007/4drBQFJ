@@ -27,20 +27,10 @@ import com.ironsource.mediationsdk.sdk.BannerListener;
 import com.startapp.sdk.adsbase.StartAppAd;
 
 
-import java.util.Locale;
-import com.adcolony.sdk.AdColony;
-import com.adcolony.sdk.AdColonyAdOptions;
-import com.adcolony.sdk.AdColonyAdSize;
-import com.adcolony.sdk.AdColonyAdView;
-import com.adcolony.sdk.AdColonyAdViewListener;
-import com.adcolony.sdk.AdColonyAppOptions;
-import com.adcolony.sdk.AdColonyZone;
-
 import eu.dkaratzas.android.inapp.update.Constants;
 import eu.dkaratzas.android.inapp.update.InAppUpdateManager;
 import eu.dkaratzas.android.inapp.update.InAppUpdateStatus;
 
-import static com.vungle.warren.ui.view.VungleWebClient.TAG;
 
 public class HomeActivity extends AppCompatActivity implements InAppUpdateManager.InAppUpdateHandler {
 

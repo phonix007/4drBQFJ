@@ -33,10 +33,6 @@ import com.startapp.sdk.adsbase.Ad;
 import com.startapp.sdk.adsbase.StartAppAd;
 import com.startapp.sdk.adsbase.adlisteners.AdEventListener;
 import com.startapp.sdk.adsbase.adlisteners.VideoListener;
-import com.vungle.warren.InitCallback;
-import com.vungle.warren.LoadAdCallback;
-import com.vungle.warren.Vungle;
-import com.vungle.warren.error.VungleException;
 
 import java.util.Locale;
 
@@ -55,7 +51,7 @@ public class HomeFragment extends Fragment  {
     private TextView mTextViewCountDown;
     private String eurl;
     private int checkad;
-    private long mStartTimeInMillis = 3600000;  // change here also
+    private long mStartTimeInMillis = 2400000;  // change here also 2400000
     ReviewManager manager;
     ReviewInfo reviewInfo;
 
@@ -113,12 +109,12 @@ public class HomeFragment extends Fragment  {
                             .setPositiveButton("Diploma", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/MSBTE_Guide")));
+                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/joinchat/S3D7dTXVloCmxJsF")));
                                 }
                             })
                             .setNegativeButton("Degree", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/SPPU_Group")));
+                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/joinchat/1Zls6H6YehxhZTU9")));
                                 }
                             })
                             //.setNegativeButton("No", null)
@@ -217,40 +213,9 @@ public class HomeFragment extends Fragment  {
             @Override
             public void onRewardedVideoAdShowFailed(IronSourceError error) {
 
-                resetTimer(); // temporary added this
-                startTimer();
-                Toast.makeText(getActivity(), "No Ads Found, Unlimited Downloading Started...", Toast.LENGTH_SHORT).show();
-                // sdk
-                Vungle.init(getString(R.string.vengal_appid), getContext(), new InitCallback() {  // change app id
-                    @Override
-                    public void onSuccess() {
-
-                    }
-
-                    @Override
-                    public void onError(VungleException exception) {
-
-                    }
-
-                    @Override
-                    public void onAutoCacheAdAvailable(String placementId) {
-
-                    }
-                });
-                Vungle.loadAd(getString(R.string.vangel_video), new LoadAdCallback() {
-                    @Override
-                    public void onAdLoad(String placementId) {
-                        if ( Vungle.canPlayAd(getString(R.string.vangel_video))){
-                            Vungle.playAd(getString(R.string.vangel_video),null,null);
-                        }
-                    }
-
-                    @Override
-                    public void onError(String placementId, VungleException exception) {
-                        StartAppAd.showAd(getApplicationContext());
-
-                    }
-                });
+//                resetTimer(); // temporary added this
+//                startTimer();
+                Toast.makeText(getActivity(), "No Ads Found, Please Try Again", Toast.LENGTH_LONG).show();
                 // review
                 manager = ReviewManagerFactory.create(getActivity());
                 Task<ReviewInfo> request = manager.requestReviewFlow();
@@ -284,8 +249,7 @@ public class HomeFragment extends Fragment  {
 
             @Override
             public void onRewardedVideoAdStarted(){
-                resetTimer(); // temporary added this
-                startTimer();
+
             }
             /* Invoked when the video ad finishes plating. */
             @Override
@@ -317,7 +281,7 @@ public class HomeFragment extends Fragment  {
         super.onStart();
         SharedPreferences prefs = this.getActivity().getSharedPreferences("prefs", MODE_PRIVATE);
 
-        mStartTimeInMillis = prefs.getLong("startTimeInMillis", 3600000);  // change time here also
+        mStartTimeInMillis = prefs.getLong("startTimeInMillis", 2400000);  // change time here also
         mTimeLeftInMillis = prefs.getLong("millisLeft", mStartTimeInMillis);
         mTimerRunning = prefs.getBoolean("timerRunning", false); //
 
